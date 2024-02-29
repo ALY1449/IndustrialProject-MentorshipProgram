@@ -3,35 +3,41 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { MentorPreferredGoals } from "./state/goals/mentorPreferredGoals";
 import { UserState } from "./state/user/user";
-import { MentorDetails } from "./state/details/mentorDetails";
+import { MentorProfessionalDetails } from "./state/details/mentorDetails";
 import { MentorSkills } from "./state/skills/mentorSkills";
+import { MentorPreferences } from "./state/preferences/menteePreferences";
 
 export interface mentorRegistrationForm {
     user: UserState,
-    mentorDetails: MentorDetails,
+    mentorProfessionalDetailsData: MentorProfessionalDetails,
+    mentorPreferences: MentorPreferences,
     mentorSkills: MentorSkills,
     mentorPreferredGoals: MentorPreferredGoals
 }
-
-export interface CreateAccountPayload {
-    users: UserState[];
-  }
 
 const initialState: mentorRegistrationForm = {
     user:{
         fullName: "",
         age: "",
+        phoneNumber: '',
+        gender: '',
         emailAddress: '',
         password: '',
         mentor: undefined,
         mentee: undefined,
+        undergrad_or_grad: undefined,
+        postgrad: undefined,
+        professional: undefined
     },
-    mentorDetails:{
-        fullName: '',
-        degree: '',
-        organisation: '',
-        industry: '',
+    mentorProfessionalDetailsData:{
+        jobTitle: '',
+        industry: [],
         specialisation: ''
+    },
+    mentorPreferences:{
+        undergrad_or_grad: undefined,
+        postgrad: undefined,
+        professional: undefined
     },
     mentorSkills:{
         firstBasicSkill: '',
@@ -56,6 +62,8 @@ export const registrationSlice = createSlice({
         createAnAccount: (state, action: PayloadAction<UserState>) => {
             state.user.fullName= action.payload.fullName;
             state.user.age = action.payload.age;
+            state.user.phoneNumber = action.payload.phoneNumber
+            state.user.gender = action.payload.gender;
             state.user.emailAddress = action.payload.emailAddress;
             state.user.password = action.payload.password;
             state.user.mentor = action.payload.mentor;
@@ -64,12 +72,15 @@ export const registrationSlice = createSlice({
             state.user.postgrad = action.payload.postgrad;
             state.user.professional = action.payload.professional
         },
-        mentorDetails: (state, action: PayloadAction<MentorDetails>) =>{
-            state.mentorDetails.fullName = action.payload.fullName;
-            state.mentorDetails.degree = action.payload.degree;
-            state.mentorDetails.organisation = action.payload.organisation;
-            state.mentorDetails.industry = action.payload.industry;
-            state.mentorDetails.specialisation = action.payload.specialisation;
+        mentorProfessionalDetails: (state, action: PayloadAction<MentorProfessionalDetails>) =>{
+            state.mentorProfessionalDetailsData.jobTitle = action.payload.jobTitle;
+            state.mentorProfessionalDetailsData.industry= action.payload.industry;
+            state.mentorProfessionalDetailsData.specialisation = action.payload.specialisation;
+        },
+        mentorPreferences: (state, action: PayloadAction<MentorPreferences>)=>{
+            state.mentorPreferences.undergrad_or_grad = action.payload.undergrad_or_grad;
+            state.mentorPreferences.postgrad = action.payload.postgrad;
+            state.mentorPreferences.professional = action.payload.professional;
         },
         mentorSkills: (state, action: PayloadAction<MentorSkills>)=>{
             state.mentorSkills.firstBasicSkill= action.payload.firstBasicSkill;
@@ -88,5 +99,5 @@ export const registrationSlice = createSlice({
     }
 })
 
-export const {createAnAccount, mentorDetails, mentorSkills, mentorPreferredGoals} = registrationSlice.actions;
+export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, mentorSkills, mentorPreferredGoals} = registrationSlice.actions;
 export default registrationSlice.reducer;

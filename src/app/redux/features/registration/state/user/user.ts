@@ -1,6 +1,8 @@
 export interface UserState{
     fullName: string,
-    age: string,
+    age?: string,
+    phoneNumber?: string,
+    gender?: string,
     emailAddress: string,
     password: string,
     mentor?: boolean

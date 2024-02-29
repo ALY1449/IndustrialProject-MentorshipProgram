@@ -9,29 +9,34 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import CreateAccount from './subform/create-account';
+import CreateAccount from '../form/subform/create-account/page';
 import { useEffect, useState } from 'react';
 import { UserState } from '../redux/features/registration/state/user/user';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAnAccount, mentorDetails, mentorSkills, mentorPreferredGoals } from '../redux/features/registration/registrationSlice';
+import { createAnAccount, mentorProfessionalDetails, mentorSkills, mentorPreferredGoals, mentorPreferences } from '../redux/features/registration/registrationSlice';
 import { RootState } from '../redux/store';
-import Details from './subform/details';
-import { MentorDetails } from '../redux/features/registration/state/details/mentorDetails';
-import BasicSkills from './subform/skills';
+import Details from '../form/subform/details/page';
+import { MentorProfessionalDetails } from '../redux/features/registration/state/details/mentorDetails';
+import BasicSkills from '../form/subform/skills/page';
 import { MentorSkills } from '../redux/features/registration/state/skills/mentorSkills';
-import Goals from './subform/goals';
+import Goals from '../form/subform/goals/page';
 import { MentorPreferredGoals } from '../redux/features/registration/state/goals/mentorPreferredGoals';
-import MenteeDetails from './subform/menteeDetails';
+import MenteeDetails from '../form/subform/mentee-details/page';
+import { Container } from '@mui/material';
+import { MentorPreferences } from '../redux/features/registration/state/preferences/menteePreferences';
+import Preferences from './subform/mentor-preferences/page';
 
 
 const Form = () => {
   const dispatch = useDispatch();
   const createAccountDetailsSelector = useSelector((state: RootState)=> state.registration.user);
-  const mentorDetailsSelector = useSelector((state: RootState)=> state.registration.mentorDetails);
+  const mentorProfessionalDetailsSelector = useSelector((state: RootState)=> state.registration.mentorProfessionalDetailsData);
+  const mentorPreferencesSelector = useSelector((state:RootState)=> state.registration.mentorPreferences);
   const mentorBasicSkillsSelector = useSelector((state: RootState)=> state.registration.mentorSkills);
   const mentorGoalsDataSelector = useSelector((state:RootState)=> state.registration.mentorPreferredGoals);
   const [createAnAccountData, setCreateAccountData]= useState<UserState>(createAccountDetailsSelector);
-  const [detailsData, setDetailsData]= useState<MentorDetails>(mentorDetailsSelector);
+  const [detailsData, setMentorProfessionalDetailsData]= useState<MentorProfessionalDetails>(mentorProfessionalDetailsSelector);
+  const [mentorPreferencesData, setMentorPreferencesData] = useState<MentorPreferences>(mentorPreferencesSelector);
   const [mentorSkillsData, setMentorSkillsData] = useState<MentorSkills>(mentorBasicSkillsSelector);
   const [mentorGoalsData, setMentorGoalsData] = useState<MentorPreferredGoals>(mentorGoalsDataSelector);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -55,21 +60,22 @@ const Form = () => {
       dispatch(createAnAccount(createAnAccountData));
     }
     if(activeStep===2){
-      dispatch(mentorDetails(detailsData));
+      dispatch(mentorProfessionalDetails(detailsData));
     }
     if(activeStep===3){
-      dispatch(mentorSkills(mentorSkillsData));
+      dispatch(mentorPreferences(mentorPreferencesData));
     }
     if(activeStep===4){
       dispatch(mentorPreferredGoals(mentorGoalsData));
     }
     
+    
   })
 
 
   useEffect(()=>{
-    console.log(activeStep, "current data", createAccountDetailsSelector)
-  }, [activeStep, createAccountDetailsSelector])
+    console.log(activeStep, "current data", mentorProfessionalDetailsSelector)
+  }, [activeStep, mentorProfessionalDetailsSelector])
 
 
   const steps = [
@@ -79,7 +85,11 @@ const Form = () => {
     },
     {
       label: 'Details',
-      content: createAccountDetailsSelector.mentor == true ? <Details mentorDetails={(data: MentorDetails) => setDetailsData(data)}/> :  <MenteeDetails/> 
+      content: createAccountDetailsSelector.mentor == true ? <Details mentorProfessionalDetailsData={(data: MentorProfessionalDetails) => setMentorProfessionalDetailsData(data)}/> :  <MenteeDetails/> 
+    },
+    {
+      label: createAccountDetailsSelector.mentor? 'Preferences' : 'Background',
+      content: <Preferences mentorPreferencesData={(data: MentorPreferences)=> setMentorPreferencesData(data)}/>
     },
     {
       label: 'Skills',
@@ -94,6 +104,7 @@ const Form = () => {
 
   return (
     <Box sx={{ maxWidth: 800}}>
+      <Container>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
           <Step key={step.label}>
@@ -138,6 +149,7 @@ const Form = () => {
           </Button>
         </Paper>
       )}
+      </Container>
     </Box>
   );
 }

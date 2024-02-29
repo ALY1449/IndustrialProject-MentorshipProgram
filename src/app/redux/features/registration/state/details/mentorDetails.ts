@@ -1,7 +1,5 @@
-export interface MentorDetails{
-    fullName: string,
-    degree: string,
-    organisation: string,
-    industry: string,
+export interface MentorProfessionalDetails{
+    jobTitle: string,
+    industry: string[],
     specialisation: string
 }
