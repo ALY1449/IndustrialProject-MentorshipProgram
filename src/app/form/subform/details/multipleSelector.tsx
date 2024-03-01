@@ -6,6 +6,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useEffect } from 'react';
+import { industrySectorData } from '../../data/industrySectorData';
+import { Box, Chip } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -18,18 +20,6 @@ const MenuProps = {
   },
 };
 
-const data = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
@@ -40,42 +30,51 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-const IndustrySectorSelector: React.FC<ChildProps> = (props) => {
+const MultipleSelector: React.FC<ChildProps> = ({data, dataStore}) => {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [selectorData, setSelectorData] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+  const handleChange = (event: SelectChangeEvent<typeof selectorData>) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setSelectorData(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
   };
 
+  console.log()
   useEffect(()=>{
-    props.industrySectorList(personName)
-  },[personName])
+    dataStore(selectorData)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[selectorData])
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="demo-multiple-name-label">You can choose more than 1</InputLabel>
         <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
           multiple
-          value={personName}
+          value={selectorData}
           onChange={handleChange}
-          input={<OutlinedInput label="You can choose more than 2" />}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
           MenuProps={MenuProps}
         >
-          {data.map((name) => (
+          {data && data.map((name: any) => (
             <MenuItem
               key={name}
               value={name}
-              style={getStyles(name, personName, theme)}
+              style={getStyles(name, selectorData, theme)}
             >
               {name}
             </MenuItem>
@@ -86,4 +85,4 @@ const IndustrySectorSelector: React.FC<ChildProps> = (props) => {
   );
 }
 
-export default IndustrySectorSelector;
+export default MultipleSelector;

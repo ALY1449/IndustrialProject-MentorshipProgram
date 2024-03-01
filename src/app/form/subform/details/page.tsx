@@ -3,17 +3,16 @@
 import { Box, Checkbox, Container, FormControlLabel, FormGroup, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { MentorProfessionalDetails } from "@/app/redux/features/registration/state/details/mentorDetails";
-import IndustrySectorSelector from "./industrySectorSelector";
+import MultipleSelector from "./multipleSelector";
+import industrySectorData from "../../data/industrySectorData";
 
 const Details: React.FC<ChildProps> = (props) => {
-    const [industrySectorList, setIndustrySectorList]= React.useState<string[]>([]);
+    const [dataStore, setDataStore]= React.useState<string[]>([]);
      const [mentorDetails, setMentorDetails] = useState<MentorProfessionalDetails>({
         jobTitle: '',
         industry: [],
         specialisation: ''
     });
-
-
 
     const handleChange = (fieldName: keyof MentorProfessionalDetails, value: string) => {
         setMentorDetails((prevValues) => ({
@@ -25,14 +24,14 @@ const Details: React.FC<ChildProps> = (props) => {
     useEffect(()=>{
         setMentorDetails((prevValues) => ({
             ...prevValues,
-            industry: industrySectorList,
+            industry: dataStore,
         }));
-    },[industrySectorList]) 
+    },[dataStore]) 
 
     useEffect(()=>{
         props.mentorProfessionalDetailsData(mentorDetails);
     })
-     
+
     return(
         <Box>
             <Container fixed>
@@ -42,7 +41,7 @@ const Details: React.FC<ChildProps> = (props) => {
                 </div>
                 <div style={{display: 'flex', alignItems: 'center', gap: '3%'}}>
                     <Typography sx={{margin:'1%'}}>Industry Sector</Typography>
-                    <IndustrySectorSelector industrySectorList={(data: string[]) => setIndustrySectorList(data)}></IndustrySectorSelector>
+                    <MultipleSelector data={industrySectorData} dataStore={(data: string[]) => setDataStore(data)}></MultipleSelector>
                 </div>
                 <div style={{display: 'flex', alignItems: 'center', gap: '5%'}}>
                     <Typography sx={{margin:'1%'}}>Specialisation</Typography>

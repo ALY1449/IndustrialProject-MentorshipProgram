@@ -74,8 +74,8 @@ const Form = () => {
 
 
   useEffect(()=>{
-    console.log(activeStep, "current data", mentorProfessionalDetailsSelector)
-  }, [activeStep, mentorProfessionalDetailsSelector])
+    console.log(activeStep, "current data", createAccountDetailsSelector)
+  }, [activeStep, createAccountDetailsSelector])
 
 
   const steps = [
