@@ -19,7 +19,7 @@ const MenteeMentorSelector = () =>{
 
     const [values, setValues] = useState<UserState>({
         fullName: '',
-        age: '',
+        age: 0,
         emailAddress: '',
         password: '',
         mentor: undefined,

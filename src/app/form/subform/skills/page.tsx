@@ -3,16 +3,18 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
 import { MentorSkills } from "@/app/redux/features/registration/state/skills/mentorSkills";
 import { useEffect, useState } from "react";
+import { RootState } from "@/app/redux/store";
+import { useSelector } from "react-redux";
 
-const BasicSkills: React.FC<ChildProps> = (props) =>{
-
+const Skills: React.FC<ChildProps> = (props) =>{
+    const mentorState = useSelector((state: RootState)=> state.registration.mentorSkills);
     const [mentorSkills, setMentorSkills] = useState<MentorSkills>({
-        firstBasicSkill: '',
-        secondBasicSkill: '',
-        thirdBasicSkill: '',
-        firstExpertSkill: '',
-        secondExpertSkill: '',
-        thirdExpertSkill: ''
+        firstBasicSkill: mentorState.firstBasicSkill,
+        secondBasicSkill: mentorState.secondBasicSkill,
+        thirdBasicSkill: mentorState.thirdBasicSkill,
+        firstExpertSkill: mentorState.firstExpertSkill,
+        secondExpertSkill: mentorState.secondExpertSkill,
+        thirdExpertSkill: mentorState.thirdExpertSkill
     });
 
     const handleInputChange = (fieldName: keyof MentorSkills, value: string) =>{
@@ -25,6 +27,7 @@ const BasicSkills: React.FC<ChildProps> = (props) =>{
     useEffect(()=>{
         props.mentorSkills(mentorSkills);
     })
+
     return(
         <Box>
             <Container>
@@ -41,4 +44,4 @@ const BasicSkills: React.FC<ChildProps> = (props) =>{
     )
 }
 
-export default BasicSkills
+export default Skills

@@ -5,20 +5,24 @@ import { MentorPreferredGoals } from "./state/goals/mentorPreferredGoals";
 import { UserState } from "./state/user/user";
 import { MentorProfessionalDetails } from "./state/details/mentorDetails";
 import { MentorSkills } from "./state/skills/mentorSkills";
-import { MentorPreferences } from "./state/preferences/menteePreferences";
+import { MentorPreferences } from "./state/preferences/mentorPreferences";
+import EducationalBackground from "./state/background/educationalBackground";
+import MenteePreferences from "./state/preferences/menteePreferences";
 
-export interface mentorRegistrationForm {
+export interface registrationForm {
     user: UserState,
     mentorProfessionalDetailsData: MentorProfessionalDetails,
     mentorPreferences: MentorPreferences,
     mentorSkills: MentorSkills,
-    mentorPreferredGoals: MentorPreferredGoals
+    mentorPreferredGoals: MentorPreferredGoals,
+    menteeEducationalBackground: EducationalBackground,
+    menteePreferences: MenteePreferences
 }
 
-const initialState: mentorRegistrationForm = {
+const initialState: registrationForm = {
     user:{
         fullName: "",
-        age: "",
+        age: 0,
         phoneNumber: '',
         gender: '',
         emailAddress: '',
@@ -51,6 +55,15 @@ const initialState: mentorRegistrationForm = {
         longTermGoal: '',
         firstShortTermGoal: '',
         secondShortTermGoal: ''
+    },
+    menteeEducationalBackground:{
+        programs: [],
+        majors: []
+    },
+    menteePreferences: {
+        female: false,
+        male: false,
+        any: false
     }
 };
 
@@ -94,10 +107,18 @@ export const registrationSlice = createSlice({
             state.mentorPreferredGoals.longTermGoal= action.payload.longTermGoal;
             state.mentorPreferredGoals.firstShortTermGoal= action.payload.firstShortTermGoal;
             state.mentorPreferredGoals.secondShortTermGoal= action.payload.secondShortTermGoal;
+        },
+        menteeEducationalBackground:  (state, action: PayloadAction<EducationalBackground>)=>{
+            state.menteeEducationalBackground.programs = action.payload.programs;
+            state.menteeEducationalBackground.majors = action.payload.majors
+        },
+        menteePreferences: (state, action: PayloadAction<MenteePreferences>) =>{
+            state.menteePreferences.female = action.payload.female;
+            state.menteePreferences.male = action.payload.male;
+            state.menteePreferences.any = action.payload.any
         }
-          
     }
 })
 
-export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, mentorSkills, mentorPreferredGoals} = registrationSlice.actions;
+export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, mentorSkills, mentorPreferredGoals, menteeEducationalBackground, menteePreferences} = registrationSlice.actions;
 export default registrationSlice.reducer;

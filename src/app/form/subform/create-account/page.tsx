@@ -9,30 +9,53 @@ import { RootState } from "@/app/redux/store";
 
 const CreateAccount: React.FC<ChildProps> = (props) => {
     const [showPassword, setShowPassword] = useState(false);
-    const mentorState = useSelector((state: RootState)=> state.registration.user.mentor);
-    const menteeState = useSelector((state: RootState)=> state.registration.user.mentee);
+    const mentorState = useSelector((state: RootState)=> state.registration.user);
+    const menteeState = useSelector((state: RootState)=> state.registration.user);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
 
-    const [values, setValues] = useState<UserState>({
-        fullName: '',
-        age: '',
-        phoneNumber: '',
-        gender: '',
-        emailAddress: '',
-        password: '',
-        mentor: mentorState,
-        mentee: menteeState,
-        undergrad_or_grad: undefined,
-        postgrad: undefined,
-        professional: undefined
+    const [values, setValues] = useState<UserState>(() => {
+        if (mentorState.mentor) {
+            return {
+                fullName: mentorState.fullName,
+                phoneNumber: mentorState.phoneNumber,
+                gender: mentorState.gender,
+                emailAddress: mentorState.emailAddress,
+                password: mentorState.password,
+                mentor: mentorState.mentor,
+                mentee: undefined,
+                age: 0,
+                undergrad_or_grad: undefined,
+                postgrad: undefined,
+                professional: undefined
+            };
+        } else {
+            return {
+                fullName: menteeState.fullName,
+                phoneNumber: menteeState.phoneNumber,
+                gender: undefined,
+                emailAddress: menteeState.emailAddress,
+                password: menteeState.password,
+                mentor: undefined,
+                mentee: menteeState.mentee,
+                age: 0,
+                undergrad_or_grad: menteeState.undergrad_or_grad,
+                postgrad: menteeState.postgrad,
+                professional: menteeState.professional
+            };
+        }
     });
+    
 
+    //Mentee extends user state
     const handleChange = (fieldName: keyof UserState, value: string | boolean) => {
         setValues((prevValues) => ({
             ...prevValues,
+            undergrad_or_grad: undefined,
+            postgrad: undefined,
+            professional: undefined,
             [fieldName]: value
         }));
     };
@@ -41,7 +64,6 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
         props.createAccountData(values);
     })
 
-    
 
     return(
         <Box>

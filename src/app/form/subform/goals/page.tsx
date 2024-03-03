@@ -1,15 +1,17 @@
 'use client';
 
 import { MentorPreferredGoals } from "@/app/redux/features/registration/state/goals/mentorPreferredGoals";
+import { RootState } from "@/app/redux/store";
 import { Box, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Goals: React.FC<ChildProps> = (props) =>{
-
+    const mentorState = useSelector((state: RootState)=>state.registration.mentorPreferredGoals);
     const [preferredgoals, setPreferredGoals] = useState<MentorPreferredGoals>({
-        longTermGoal: '',
-        firstShortTermGoal: '',
-        secondShortTermGoal: ''
+        longTermGoal: mentorState.longTermGoal,
+        firstShortTermGoal: mentorState.firstShortTermGoal,
+        secondShortTermGoal: mentorState.secondShortTermGoal
     })
 
     const handleInputChange = (fieldName: keyof MentorPreferredGoals, value: string) =>{
