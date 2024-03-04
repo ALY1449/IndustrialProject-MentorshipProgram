@@ -1,20 +1,20 @@
 'use client';
 
-import { MentorPreferredGoals } from "@/app/redux/features/registration/state/goals/mentorPreferredGoals";
+import { Goals } from "@/app/redux/features/registration/state/goals/goals";
 import { RootState } from "@/app/redux/store";
 import { Box, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const Goals: React.FC<ChildProps> = (props) =>{
-    const mentorState = useSelector((state: RootState)=>state.registration.mentorPreferredGoals);
-    const [preferredgoals, setPreferredGoals] = useState<MentorPreferredGoals>({
-        longTermGoal: mentorState.longTermGoal,
-        firstShortTermGoal: mentorState.firstShortTermGoal,
-        secondShortTermGoal: mentorState.secondShortTermGoal
+const GoalsComponent: React.FC<ChildProps> = (props) =>{
+    const goalsState = useSelector((state: RootState)=>state.registration.goals);
+    const [preferredgoals, setPreferredGoals] = useState<Goals>({
+        longTermGoal: goalsState.longTermGoal,
+        firstShortTermGoal: goalsState.firstShortTermGoal,
+        secondShortTermGoal: goalsState.secondShortTermGoal
     })
 
-    const handleInputChange = (fieldName: keyof MentorPreferredGoals, value: string) =>{
+    const handleInputChange = (fieldName: keyof Goals, value: string) =>{
         setPreferredGoals((prevValues)=>({
             ...prevValues,
             [fieldName]: value
@@ -22,7 +22,7 @@ const Goals: React.FC<ChildProps> = (props) =>{
     }
 
     useEffect(()=>{
-        props.mentorGoals(preferredgoals);
+        props.goalsData(preferredgoals);
     })
     
     return(
@@ -36,4 +36,4 @@ const Goals: React.FC<ChildProps> = (props) =>{
         </Box>
     )
 }
-export default Goals;
+export default GoalsComponent;
