@@ -1,20 +1,20 @@
 'use client';
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { MentorPreferredGoals } from "./state/goals/mentorPreferredGoals";
+import { Goals } from "./state/goals/goals";
 import { UserState } from "./state/user/user";
 import { MentorProfessionalDetails } from "./state/details/mentorDetails";
-import { MentorSkills } from "./state/skills/mentorSkills";
 import { MentorPreferences } from "./state/preferences/mentorPreferences";
 import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
+import { Skills } from "./state/skills/skills";
 
 export interface registrationForm {
     user: UserState,
     mentorProfessionalDetailsData: MentorProfessionalDetails,
     mentorPreferences: MentorPreferences,
-    mentorSkills: MentorSkills,
-    mentorPreferredGoals: MentorPreferredGoals,
+    skills: Skills,
+    goals: Goals,
     menteeEducationalBackground: EducationalBackground,
     menteePreferences: MenteePreferences
 }
@@ -43,15 +43,19 @@ const initialState: registrationForm = {
         postgrad: undefined,
         professional: undefined
     },
-    mentorSkills:{
-        firstBasicSkill: '',
-        secondBasicSkill: '',
-        thirdBasicSkill: '',
-        firstExpertSkill: '',
-        secondExpertSkill: '',
-        thirdExpertSkill: ''
+    skills: {
+        basicSkills:{
+            firstBasicSoftSkill: '',
+            firstBasicIndustrySkill: '',
+            secondBasicIndustrySkill: ''
+        },
+        expertSkills:{
+            firstExpertSoftSkill: '',
+            firstExpertIndustrySkill: '',
+            secondExpertIndustrySkill: ''
+        },
     },
-    mentorPreferredGoals:{
+    goals:{
         longTermGoal: '',
         firstShortTermGoal: '',
         secondShortTermGoal: ''
@@ -95,18 +99,18 @@ export const registrationSlice = createSlice({
             state.mentorPreferences.postgrad = action.payload.postgrad;
             state.mentorPreferences.professional = action.payload.professional;
         },
-        mentorSkills: (state, action: PayloadAction<MentorSkills>)=>{
-            state.mentorSkills.firstBasicSkill= action.payload.firstBasicSkill;
-            state.mentorSkills.secondBasicSkill= action.payload.secondBasicSkill;
-            state.mentorSkills.thirdBasicSkill= action.payload.thirdBasicSkill;
-            state.mentorSkills.firstExpertSkill= action.payload.firstExpertSkill;
-            state.mentorSkills.secondExpertSkill= action.payload.secondExpertSkill;
-            state.mentorSkills.thirdExpertSkill= action.payload.thirdExpertSkill;
+        skills: (state, action: PayloadAction<Skills>)=>{ 
+            state.skills.basicSkills.firstBasicSoftSkill= action.payload.basicSkills.firstBasicSoftSkill;
+            state.skills.basicSkills.firstBasicIndustrySkill= action.payload.basicSkills.firstBasicIndustrySkill;
+            state.skills.basicSkills.secondBasicIndustrySkill = action.payload.basicSkills.secondBasicIndustrySkill;
+            state.skills.expertSkills.firstExpertSoftSkill = action.payload.expertSkills.firstExpertSoftSkill;
+            state.skills.expertSkills.firstExpertIndustrySkill = action.payload.expertSkills.firstExpertIndustrySkill;
+            state.skills.expertSkills.secondExpertIndustrySkill = action.payload.expertSkills.secondExpertIndustrySkill;
         },
-        mentorPreferredGoals: (state, action: PayloadAction<MentorPreferredGoals>)=>{
-            state.mentorPreferredGoals.longTermGoal= action.payload.longTermGoal;
-            state.mentorPreferredGoals.firstShortTermGoal= action.payload.firstShortTermGoal;
-            state.mentorPreferredGoals.secondShortTermGoal= action.payload.secondShortTermGoal;
+        goals: (state, action: PayloadAction<Goals>)=>{
+            state.goals.longTermGoal= action.payload.longTermGoal;
+            state.goals.firstShortTermGoal= action.payload.firstShortTermGoal;
+            state.goals.secondShortTermGoal= action.payload.secondShortTermGoal;
         },
         menteeEducationalBackground:  (state, action: PayloadAction<EducationalBackground>)=>{
             state.menteeEducationalBackground.programs = action.payload.programs;
@@ -120,5 +124,5 @@ export const registrationSlice = createSlice({
     }
 })
 
-export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, mentorSkills, mentorPreferredGoals, menteeEducationalBackground, menteePreferences} = registrationSlice.actions;
+export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, skills, goals, menteeEducationalBackground, menteePreferences} = registrationSlice.actions;
 export default registrationSlice.reducer;

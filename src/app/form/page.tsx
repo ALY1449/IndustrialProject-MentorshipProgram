@@ -13,15 +13,15 @@ import CreateAccount from '../form/subform/create-account/page';
 import { useEffect, useState } from 'react';
 import { UserState } from '../redux/features/registration/state/user/user';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAnAccount, mentorProfessionalDetails, mentorSkills, mentorPreferredGoals, mentorPreferences, 
+import { createAnAccount, mentorProfessionalDetails, skills, goals, mentorPreferences, 
   menteeEducationalBackground, menteePreferences} from '../redux/features/registration/registrationSlice';
 import { RootState } from '../redux/store';
 import Details from '../form/subform/details/page';
 import { MentorProfessionalDetails } from '../redux/features/registration/state/details/mentorDetails';
-import Skills from '../form/subform/skills/page';
-import { MentorSkills } from '../redux/features/registration/state/skills/mentorSkills';
-import Goals from '../form/subform/goals/page';
-import { MentorPreferredGoals } from '../redux/features/registration/state/goals/mentorPreferredGoals';
+import SkillsComponent from './subform/skills/page';
+import { Skills } from '../redux/features/registration/state/skills/skills';
+import GoalsComponent from './subform/goals/page';
+import { Goals } from '../redux/features/registration/state/goals/goals';
 import { Container } from '@mui/material';
 import { MentorPreferences } from '../redux/features/registration/state/preferences/mentorPreferences';
 import Preferences from './subform/mentor-preferences/page';
@@ -36,13 +36,13 @@ const Form = () => {
   const createAccountDetailsSelector = useSelector((state: RootState)=> state.registration.user);
   const mentorProfessionalDetailsSelector = useSelector((state: RootState)=> state.registration.mentorProfessionalDetailsData);
   const mentorPreferencesSelector = useSelector((state:RootState)=> state.registration.mentorPreferences);
-  const mentorBasicSkillsSelector = useSelector((state: RootState)=> state.registration.mentorSkills);
-  const mentorGoalsDataSelector = useSelector((state:RootState)=> state.registration.mentorPreferredGoals);
+  const skillsSelector = useSelector((state: RootState)=> state.registration.skills);
+  const goalsSelector = useSelector((state:RootState)=> state.registration.goals);
   const [createAnAccountData, setCreateAccountData]= useState<UserState>(createAccountDetailsSelector);
   const [detailsData, setMentorProfessionalDetailsData]= useState<MentorProfessionalDetails>(mentorProfessionalDetailsSelector);
   const [mentorPreferencesData, setMentorPreferencesData] = useState<MentorPreferences>(mentorPreferencesSelector);
-  const [mentorSkillsData, setMentorSkillsData] = useState<MentorSkills>(mentorBasicSkillsSelector);
-  const [mentorGoalsData, setMentorGoalsData] = useState<MentorPreferredGoals>(mentorGoalsDataSelector);
+  const [skillsData, setSkillsData] = useState<Skills>(skillsSelector);
+  const [goalsData, setGoalsData] = useState<Goals>(goalsSelector);
 
 
   const menteePreferencesSelector = useSelector((state:RootState)=> state.registration.menteePreferences)
@@ -87,16 +87,16 @@ const Form = () => {
      }
     }
     if(activeStep===4){
-      dispatch(mentorSkills(mentorSkillsData));
+      dispatch(skills(skillsData));
     }
     if(activeStep===5){
-      dispatch(mentorPreferredGoals(mentorGoalsData));
+      dispatch(goals(goalsData));
     }
   })
 
   useEffect(()=>{
-    console.log(activeStep, "current data", menteePreferencesData)
-  }, [activeStep, menteePreferencesData])
+    console.log(activeStep, "current data", goalsData)
+  }, [activeStep, goalsData])
 
 
   const mentorSteps = [
@@ -114,11 +114,11 @@ const Form = () => {
     },
     {
       label: 'Skills',
-      content: <Skills mentorSkills={(data: MentorSkills) => setMentorSkillsData(data)}/>
+      content: <SkillsComponent mentorSkills={(data: Skills) => setSkillsData(data)}/>
     },
     {
       label: 'Goals',
-      content: <Goals mentorGoals={(data: MentorPreferredGoals)=> setMentorGoalsData(data)}></Goals>
+      content: <GoalsComponent goalsData={(data: Goals)=> setGoalsData(data)}></GoalsComponent>
     },
   ];
 
@@ -139,11 +139,11 @@ const Form = () => {
     },
     {
       label: 'Skills',
-      content: <Skills mentorSkills={(data: MentorSkills) => setMentorSkillsData(data)}/>
+      content: <SkillsComponent skills={(data: Skills) => setSkillsData(data)}/>
     },
     {
       label: 'Goals',
-      content: <Goals mentorGoals={(data: MentorPreferredGoals)=> setMentorGoalsData(data)}></Goals>
+      content: <GoalsComponent goalsData={(data: Goals)=> setGoalsData(data)}></GoalsComponent>
     },
   ];
 
