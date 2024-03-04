@@ -7,23 +7,24 @@ import industrySectorData from "../../data/industrySectorData";
 import React from "react";
 import EducationalBackground from "@/app/redux/features/registration/state/background/educationalBackground";
 import Programs from "../../data/programsData";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 const EducationalBackgroundComponent: React.FC<ChildProps> = (props) => {
-
+    const educationalBackgroundState = useSelector((state: RootState)=> state.registration.menteeEducationalBackground);
     const [educationalBackground, setEducationalBackground] = useState<EducationalBackground>({
-        programs:[],
-        majors: []
+        programs:educationalBackgroundState.programs,
+        majors: educationalBackgroundState.majors
     });
 
-    const [chosenPrograms, setChosenPrograms] =   React.useState([]);
-    const [chosenMajors, setChosenMajors] =  React.useState([]);
-
+    const [chosenPrograms, setChosenPrograms] = React.useState<string[]>([]);
+    const [chosenMajors, setChosenMajors] = React.useState<string[]>([]);
 
     useEffect(() => {
         setEducationalBackground({
-            programs: chosenPrograms,
+            programs: chosenPrograms, 
             majors: chosenMajors
-        });
+        })
     }, [chosenPrograms, chosenMajors]);
 
     useEffect(()=>{

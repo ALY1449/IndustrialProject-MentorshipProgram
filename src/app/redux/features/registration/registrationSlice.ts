@@ -8,6 +8,7 @@ import { MentorPreferences } from "./state/preferences/mentorPreferences";
 import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
 import { Skills } from "./state/skills/skills";
+import { PersonalityType } from "./state/personality-type/personalityType";
 
 export interface registrationForm {
     user: UserState,
@@ -16,7 +17,8 @@ export interface registrationForm {
     skills: Skills,
     goals: Goals,
     menteeEducationalBackground: EducationalBackground,
-    menteePreferences: MenteePreferences
+    menteePreferences: MenteePreferences,
+    personalityType: PersonalityType
 }
 
 const initialState: registrationForm = {
@@ -68,6 +70,9 @@ const initialState: registrationForm = {
         female: false,
         male: false,
         any: false
+    },
+    personalityType:{
+        personalityType: ''
     }
 };
 
@@ -120,9 +125,12 @@ export const registrationSlice = createSlice({
             state.menteePreferences.female = action.payload.female;
             state.menteePreferences.male = action.payload.male;
             state.menteePreferences.any = action.payload.any
+        },
+        personalityType: (state, action: PayloadAction<PersonalityType>) =>{
+            state.personalityType.personalityType = action.payload.personalityType
         }
     }
 })
 
-export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, skills, goals, menteeEducationalBackground, menteePreferences} = registrationSlice.actions;
+export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, skills, goals, menteeEducationalBackground, menteePreferences, personalityType} = registrationSlice.actions;
 export default registrationSlice.reducer;

@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { UserState } from '../redux/features/registration/state/user/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAnAccount, mentorProfessionalDetails, skills, goals, mentorPreferences, 
-  menteeEducationalBackground, menteePreferences} from '../redux/features/registration/registrationSlice';
+  menteeEducationalBackground, menteePreferences, personalityType} from '../redux/features/registration/registrationSlice';
 import { RootState } from '../redux/store';
 import Details from '../form/subform/details/page';
 import { MentorProfessionalDetails } from '../redux/features/registration/state/details/mentorDetails';
@@ -29,6 +29,8 @@ import EducationalBackgroundComponent from './subform/background/educationalBack
 import EducationalBackground from '../redux/features/registration/state/background/educationalBackground';
 import MenteePreferencesComponent from './subform/mentee-preferences/page';
 import MenteePreferences from '../redux/features/registration/state/preferences/menteePreferences';
+import PersonalityTypeComponent from './subform/personality-type/page';
+import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
 
 
 const Form = () => {
@@ -38,12 +40,14 @@ const Form = () => {
   const mentorPreferencesSelector = useSelector((state:RootState)=> state.registration.mentorPreferences);
   const skillsSelector = useSelector((state: RootState)=> state.registration.skills);
   const goalsSelector = useSelector((state:RootState)=> state.registration.goals);
+  const personalityTypeSelector = useSelector((state: RootState)=> state.registration.personalityType);
+
   const [createAnAccountData, setCreateAccountData]= useState<UserState>(createAccountDetailsSelector);
   const [detailsData, setMentorProfessionalDetailsData]= useState<MentorProfessionalDetails>(mentorProfessionalDetailsSelector);
   const [mentorPreferencesData, setMentorPreferencesData] = useState<MentorPreferences>(mentorPreferencesSelector);
   const [skillsData, setSkillsData] = useState<Skills>(skillsSelector);
   const [goalsData, setGoalsData] = useState<Goals>(goalsSelector);
-
+  const [personalityTypeData, setPersonalityTypeData] = useState<PersonalityType>(personalityTypeSelector);
 
   const menteePreferencesSelector = useSelector((state:RootState)=> state.registration.menteePreferences)
   const menteeEducationalBackgroundSelector = useSelector((state: RootState)=> state.registration.menteeEducationalBackground);
@@ -92,6 +96,9 @@ const Form = () => {
     if(activeStep===5){
       dispatch(goals(goalsData));
     }
+    if(activeStep===6){
+      dispatch(personalityType(personalityTypeData));
+    }
   })
 
   useEffect(()=>{
@@ -114,12 +121,16 @@ const Form = () => {
     },
     {
       label: 'Skills',
-      content: <SkillsComponent mentorSkills={(data: Skills) => setSkillsData(data)}/>
+      content: <SkillsComponent skills={(data: Skills) => setSkillsData(data)}/>
     },
     {
       label: 'Goals',
       content: <GoalsComponent goalsData={(data: Goals)=> setGoalsData(data)}></GoalsComponent>
     },
+    {
+      label: 'Personality Type',
+      content: <PersonalityTypeComponent personalityType={(data: PersonalityType) => setPersonalityTypeData(data)}/>
+    }
   ];
 
   const menteeSteps = [
@@ -145,6 +156,10 @@ const Form = () => {
       label: 'Goals',
       content: <GoalsComponent goalsData={(data: Goals)=> setGoalsData(data)}></GoalsComponent>
     },
+    {
+      label: 'Personality Type',
+      content: <PersonalityTypeComponent personalityType={(data: PersonalityType) => setPersonalityTypeData(data)}/>
+    }
   ];
 
   
@@ -157,7 +172,7 @@ const Form = () => {
           <Step key={`${step.label}-${index}`}>
             <StepLabel
               optional={
-                index === 5 ? (
+                index === 6 ? (
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
