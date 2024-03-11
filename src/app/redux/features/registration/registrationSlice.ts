@@ -28,7 +28,6 @@ const initialState: registrationForm = {
         phoneNumber: '',
         gender: '',
         emailAddress: '',
-        password: '',
         mentor: undefined,
         mentee: undefined,
         undergrad_or_grad: undefined,
@@ -87,7 +86,6 @@ export const registrationSlice = createSlice({
             state.user.phoneNumber = action.payload.phoneNumber
             state.user.gender = action.payload.gender;
             state.user.emailAddress = action.payload.emailAddress;
-            state.user.password = action.payload.password;
             state.user.mentor = action.payload.mentor;
             state.user.mentee = action.payload.mentee;
             state.user.undergrad_or_grad = action.payload.undergrad_or_grad;

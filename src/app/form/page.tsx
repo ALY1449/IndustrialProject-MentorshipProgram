@@ -73,11 +73,15 @@ const Form = () => {
   const writeData = () =>{
     const formData = {
       fullName: createAnAccountData.fullName,
-      gender: createAnAccountData.gender,
+      age: createAnAccountData.age ? createAnAccountData.age : 0,
       phoneNumber: createAnAccountData.phoneNumber,
+      gender:  createAnAccountData.gender == undefined ? null : createAnAccountData.gender,
       emailAddress: createAnAccountData.emailAddress,
-      mentor: createAnAccountData.mentor,
-      mentee: createAnAccountData.mentee ? createAnAccountData.mentee : null
+      mentor: createAnAccountData.mentor == undefined ? null : createAnAccountData.mentor,
+      mentee: createAnAccountData.mentee == undefined ? null : createAnAccountData.mentee,
+      undergrad_or_grad: createAnAccountData.undergrad_or_grad == undefined ? null : createAnAccountData.undergrad_or_grad,
+      postgrad: createAnAccountData.postgrad == undefined ? null : createAnAccountData.postgrad,
+      professional: createAnAccountData.professional == undefined ? null : createAnAccountData.professional,
     }
     setDoc(writePersonalDetailsData, formData);
   }

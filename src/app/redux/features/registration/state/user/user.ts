@@ -4,7 +4,6 @@ export interface UserState{
     phoneNumber?: string,
     gender?: string,
     emailAddress: string,
-    password?: string,
     mentor?: boolean
     mentee?: boolean,
     undergrad_or_grad?: boolean,
