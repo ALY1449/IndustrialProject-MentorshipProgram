@@ -34,16 +34,16 @@ const Details: React.FC<ChildProps> = (props) => {
 
     return(
         <Box>
-            <Container fixed>
-                <div style={{display: 'flex', alignItems: 'center', gap: '11%'}}>
+            <Container fixed sx={{padding: '5%'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '9%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Job Title</Typography>
                     <TextField sx={{ m: 1, width: '35ch' }} onChange={(e)=> handleChange('jobTitle', e.target.value)}/>
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '3%'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '4%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Industry Sector</Typography>
                     <MultipleSelector data={industrySectorData} dataStore={(data: string[]) => setDataStore(data)}></MultipleSelector>
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '5%'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '5%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Specialisation</Typography>
                     <TextField sx={{ m: 1, width: '35ch' }} onChange={(e)=> handleChange('specialisation', e.target.value)}/>
                 </div>

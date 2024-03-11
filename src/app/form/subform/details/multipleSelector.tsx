@@ -51,8 +51,11 @@ const MultipleSelector: React.FC<ChildProps> = ({data, dataStore}) => {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-name-label">You can choose more than 1</InputLabel>
+      <FormControl sx={{ m: 1, width: '200px', // Default width for mobile
+          '@media (min-width: 600px)': {
+            width: '350px', // Change width for screens wider than 600px
+          },}}>
+        <InputLabel id="demo-multiple-name-label">Can be more than 1</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"

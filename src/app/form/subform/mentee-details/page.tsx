@@ -13,9 +13,10 @@ const MenteeDetails: React.FC<ChildProps> = (props) =>{
 
     const [values, setValues] = useState<UserState>({
         fullName: '',
-        age: '',
+        age: 0,
         phoneNumber: '',
         gender: '',
+        birthdate: new Date(),
         emailAddress: '',
         password: '',
         mentor: mentorState,

@@ -9,6 +9,7 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import ProfilePhotoComponent from './subform/profile-photo/page';
 import CreateAccount from '../form/subform/create-account/page';
 import { useEffect, useState } from 'react';
 import { UserState } from '../redux/features/registration/state/user/user';
@@ -31,9 +32,20 @@ import MenteePreferencesComponent from './subform/mentee-preferences/page';
 import MenteePreferences from '../redux/features/registration/state/preferences/menteePreferences';
 import PersonalityTypeComponent from './subform/personality-type/page';
 import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
-
+import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const Form = () => {
+  const app = initializeApp({
+    apiKey: "AIzaSyD34-PzQb_WxlQvRrt8a2vH5oUzmr0CzKk",
+    authDomain: "mentorshipapplicationform.firebaseapp.com",
+    projectId: "mentorshipapplicationform",
+    storageBucket: "mentorshipapplicationform.appspot.com",
+    messagingSenderId: "664284335203",
+    appId: "1:664284335203:web:459803b8dc8a1a6574bc56"
+  });
+  const firestore = getFirestore();
+
   const dispatch = useDispatch();
   const createAccountDetailsSelector = useSelector((state: RootState)=> state.registration.user);
   const mentorProfessionalDetailsSelector = useSelector((state: RootState)=> state.registration.mentorProfessionalDetailsData);
@@ -55,6 +67,24 @@ const Form = () => {
   const [menteePreferencesData, setMenteePreferencesData] =  useState<MenteePreferences>(menteePreferencesSelector);
 
   const [activeStep, setActiveStep] = React.useState(0);
+
+  const writePersonalDetailsData = doc(firestore, `mentor/mentorName1/personalDetails/mentorName1`);
+
+  const writeData = () =>{
+    const formData = {
+      fullName: createAnAccountData.fullName,
+      gender: createAnAccountData.gender,
+      phoneNumber: createAnAccountData.phoneNumber,
+      emailAddress: createAnAccountData.emailAddress,
+      mentor: createAnAccountData.mentor,
+      mentee: createAnAccountData.mentee ? createAnAccountData.mentee : null
+    }
+    setDoc(writePersonalDetailsData, formData);
+  }
+
+  useEffect(()=>{
+    activeStep === 7 ?  writeData() : console.log("none");
+  },[activeStep])
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -101,12 +131,16 @@ const Form = () => {
     }
   })
 
-  useEffect(()=>{
-    console.log(activeStep, "current data", goalsData)
-  }, [activeStep, goalsData])
+  // useEffect(()=>{
+  //   console.log(activeStep, "current data", goalsData)
+  // }, [activeStep, goalsData])
 
 
   const mentorSteps = [
+    {
+      label: 'Upload photo',
+      content: <ProfilePhotoComponent/>
+    },
     {
       label: 'Create an Account',
       content: <CreateAccount createAccountData={(data: UserState) => setCreateAccountData(data)}/>
@@ -134,6 +168,10 @@ const Form = () => {
   ];
 
   const menteeSteps = [
+    {
+      label: 'Upload photo',
+      content: <ProfilePhotoComponent/>
+    },
     {
       label: 'Create an Account',
       content: <CreateAccount createAccountData={(data: UserState) => setCreateAccountData(data)}/>
@@ -163,17 +201,18 @@ const Form = () => {
   ];
 
   
-
   return (
-    <Box sx={{ maxWidth: 800}}>
-      <Container>
-      <Stepper activeStep={activeStep} orientation="vertical">
+    <Box sx={{ display: 'flex', padding: '5%', alignContent: 'center'}}>
+      <Container sx={{backgroundColor: '#F4E6F2', borderRadius:'10px'}}> 
+      <Stepper activeStep={activeStep} orientation="vertical" sx={{padding: '5%', '& .MuiStepLabel-label': { color: '#1E1F42'},  
+        '& .MuiStepLabel-label.Mui-active': { color: '#1E1F42', fontWeight:'bold', fontSize: '20px'},
+        '& .MuiStepLabel-label.Mui-completed': { color: '#1E1F42', fontSize: '20px', fontWeight: 'bold'}}}>
         {createAccountDetailsSelector.mentor ? mentorSteps.map((step, index) => (
           <Step key={`${step.label}-${index}`}>
             <StepLabel
               optional={
                 index === 6 ? (
-                  <Typography variant="caption">Last step</Typography>
+                  <span>Last step</span>
                 ) : null
               }
             >
@@ -186,7 +225,7 @@ const Form = () => {
                   <Button
                     variant="contained"
                     onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
+                    sx={{ mt: 1, mr: 1, backgroundColor: '#8F3880'}}
                   >
                     {index === mentorSteps.length - 1 ? 'Finish' : 'Continue'}
                   </Button>
@@ -209,6 +248,10 @@ const Form = () => {
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
+              style={{ color: 'white' }}
+              sx={{ '& .MuiStepLabel-root .Mui-active': {
+                color: 'white', // circle color (ACTIVE)
+              }}}
             >
               {step.label}
             </StepLabel>

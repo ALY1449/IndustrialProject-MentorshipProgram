@@ -5,7 +5,7 @@ import { Box, Checkbox, Container, FormControlLabel, FormGroup, Typography } fro
 import { useEffect, useState } from "react";
 import MultipleSelector from "../details/multipleSelector";
 import MenteeTypesData from "../../data/menteeTypesData";
-import MentorIndustryPreferences from "../../data/mentorIndustryPreferences";
+import industrySectorData from "../../data/industrySectorData";
 import React from "react";
 
 const Preferences: React.FC<ChildProps> = (props) =>{
@@ -29,14 +29,14 @@ const Preferences: React.FC<ChildProps> = (props) =>{
     
     return(
         <Box>
-            <Container>
+            <Container sx={{padding: '5%', gap: '30px', display: 'flex', flexDirection: 'column'}}>
                 <div style={{ alignItems: 'center', gap: '3%'}}>
                     <Typography sx={{margin:'1%'}}>What type/s of mentee would you prefer?</Typography>
                     <MultipleSelector data={MenteeTypesData} dataStore={(data: string[]) => setDataStore(data)}></MultipleSelector>
                 </div>
                 <div style={{ alignItems: 'center', gap: '3%'}}>
                     <Typography sx={{margin:'1%'}}>What industries or career transitions are you seeking mentorship?</Typography>
-                    <MultipleSelector data={MentorIndustryPreferences} dataStore={(data: string[]) => setDataStore(data)}></MultipleSelector>
+                    <MultipleSelector data={industrySectorData} dataStore={(data: string[]) => setDataStore(data)}></MultipleSelector>
                 </div>
             </Container>
         </Box>

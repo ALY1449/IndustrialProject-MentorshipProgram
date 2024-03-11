@@ -48,9 +48,9 @@ const MenteeMentorSelector = () =>{
         <Box>
             <Container fixed>
                 <Typography sx={{margin:'1%'}} variant="h3">Joining as a </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={6} >
-                        <Card sx={{ maxWidth: 345}} onClick={() => handleClick('mentor', true)}>
+                <Grid container spacing={2} >
+                    <Grid item  xs={12} sm={6}  >
+                        <Card sx={{ width: '100%', maxWidth: '100%'}} onClick={() => handleClick('mentor', true)}>
                             <CardActionArea>
                                 <CardMedia
                                     component="img"
@@ -64,8 +64,8 @@ const MenteeMentorSelector = () =>{
                                 </CardActionArea>
                         </Card>
                     </Grid>
-                    <Grid item xs={6} >
-                        <Card sx={{ maxWidth: 345 }} onClick={() => handleClick('mentee', true)}>
+                    <Grid item xs={12} sm={6}  >
+                        <Card sx={{ width: '100%', maxWidth: '100%' }} onClick={() => handleClick('mentee', true)}>
                             <CardActionArea>
                                 <CardMedia
                                     component="img"

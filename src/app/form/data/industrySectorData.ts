@@ -1,14 +1,16 @@
 const industrySectorData = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
+    'Engineering',
+    'Information Technology (IT) and Computer Science',
+    'Healthcare and Medicine',
+    'Biotechnology and Life Sciences',
+    'Renewable Energy',
+    'Agriculture and Food Science',
+    'Aerospace and Defense',
+    'Environmental Science and Sustainability',
+    'Telecommunications',
+    'Robotics and Automation',
+    'Manufacturing and Materials Science',
+    'Space Exploration and Astronomy'
 ];
 
 export default industrySectorData;

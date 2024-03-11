@@ -67,8 +67,8 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
 
     return(
         <Box>
-          <Container fixed>
-                <div style={{display: 'flex', alignItems: 'center', gap: '10%'}}>
+          <Container sx={{padding: '5%', display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '10%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Full Name</Typography>
                         <TextField
                             sx={{ m: 1, width: '35ch' }}
@@ -90,7 +90,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                     </div>
                 )}
                 {values.mentee && (
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
                     <Typography sx={{margin:'1%'}}>Age</Typography>
                     <TextField
                         sx={{ m: 1, width: '35ch' }}
@@ -98,7 +98,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                     />
                     </div>
                 )}
-                <div style={{display: 'flex', alignItems: 'center', gap: '6%'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '6%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Email Address</Typography>
                     <TextField
                         id="outlined-start-adornment"
@@ -106,7 +106,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                         onChange={(e) => handleChange('emailAddress', e.target.value)}
                     />
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '5%'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '5%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Phone Number</Typography>
                     <TextField
                         id="outlined-start-adornment"

@@ -1,15 +1,18 @@
-'use client';
-
-import { Box, Container } from '@mui/material'
+'use client'
+import React, { useEffect, useState } from 'react';
 import MenteeMentorSelector from './mentorship-application/page';
+import { Box, Container } from '@mui/material';
 
-export default function Home() {
+const Home = () => {
+
   return (
-      <Box sx={{maxWidth:'80%', borderRadius: '50px', padding:'5%'}}>
-            <Container fixed sx={{paddingRight:'50px', backgroundColor: "pink"}}>
-              <MenteeMentorSelector />
-                {/* <Form/> */}
-            </Container>
-      </Box>
-  )
-}
+    <Box>
+      <Container>
+        {/* Render your components using the data fetched from Firebase */}
+        <MenteeMentorSelector />
+      </Container>
+    </Box>
+  );
+};
+
+export default Home;
