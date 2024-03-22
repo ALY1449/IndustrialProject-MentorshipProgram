@@ -4,14 +4,22 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import DataTable from '../table/page';
+import DataTable from '../data-table/page';
+import MatchComponent from '../match/page';
+import { useState, useEffect } from 'react';
+import MediaCard from '../card-media/page';
 
 export default function LabTabs() {
   const [value, setValue] = React.useState('1');
+  const [mentee, setMentee] = useState("");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  useEffect(()=>{
+    console.log("mentee", mentee)
+  }, [mentee])
 
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -23,9 +31,9 @@ export default function LabTabs() {
             <Tab label="Bio" value="3" />
           </TabList>
         </Box>
-        <TabPanel value="1"><DataTable/></TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
-        <TabPanel value="3">Item Three</TabPanel>
+        <TabPanel value="1"><DataTable changeTab={(data: string)=> setValue(data)} allocateMentee={(mentee: string)=> setMentee(mentee)}/></TabPanel>
+        <TabPanel value="2"><MatchComponent chosenMentee={mentee}/></TabPanel>
+        <TabPanel value="3"><MediaCard/></TabPanel>
       </TabContext>
     </Box>
   );

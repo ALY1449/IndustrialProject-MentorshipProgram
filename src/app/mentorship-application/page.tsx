@@ -21,14 +21,12 @@ const MenteeMentorSelector = () =>{
         fullName: '',
         age: 0,
         emailAddress: '',
-        password: '',
         mentor: undefined,
         mentee: undefined,
         undergrad_or_grad: undefined,
         postgrad: undefined,
         professional: undefined
     });
-
 
 
     const handleClick = (fieldName: keyof UserState, value: boolean) =>{
