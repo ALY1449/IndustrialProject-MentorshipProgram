@@ -9,6 +9,7 @@ import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
 import { Skills } from "./state/skills/skills";
 import { PersonalityType } from "./state/personality-type/personalityType";
+import { HomeTableData } from "./state/dashboard/home-table-data";
 
 export interface registrationForm {
     user: UserState,
@@ -30,9 +31,7 @@ const initialState: registrationForm = {
         emailAddress: '',
         mentor: undefined,
         mentee: undefined,
-        undergrad_or_grad: undefined,
-        postgrad: undefined,
-        professional: undefined
+        currentStage: ''
     },
     mentorProfessionalDetailsData:{
         jobTitle: '',
@@ -66,9 +65,7 @@ const initialState: registrationForm = {
         majors: []
     },
     menteePreferences: {
-        female: false,
-        male: false,
-        any: false
+        preferences: []
     },
     personalityType:{
         personalityType: ''
@@ -88,9 +85,7 @@ export const registrationSlice = createSlice({
             state.user.emailAddress = action.payload.emailAddress;
             state.user.mentor = action.payload.mentor;
             state.user.mentee = action.payload.mentee;
-            state.user.undergrad_or_grad = action.payload.undergrad_or_grad;
-            state.user.postgrad = action.payload.postgrad;
-            state.user.professional = action.payload.professional
+            state.user.currentStage = action.payload.currentStage
         },
         mentorProfessionalDetails: (state, action: PayloadAction<MentorProfessionalDetails>) =>{
             state.mentorProfessionalDetailsData.jobTitle = action.payload.jobTitle;
@@ -120,9 +115,7 @@ export const registrationSlice = createSlice({
             state.menteeEducationalBackground.majors = action.payload.majors
         },
         menteePreferences: (state, action: PayloadAction<MenteePreferences>) =>{
-            state.menteePreferences.female = action.payload.female;
-            state.menteePreferences.male = action.payload.male;
-            state.menteePreferences.any = action.payload.any
+            state.menteePreferences.preferences = action.payload.preferences;
         },
         personalityType: (state, action: PayloadAction<PersonalityType>) =>{
             state.personalityType.personalityType = action.payload.personalityType

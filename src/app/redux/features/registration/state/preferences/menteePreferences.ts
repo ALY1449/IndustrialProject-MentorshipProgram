@@ -1,7 +1,5 @@
 interface MenteePreferences {
-    female: boolean,
-    male: boolean,
-    any: boolean
+    preferences: []
 }
 
 export default MenteePreferences;

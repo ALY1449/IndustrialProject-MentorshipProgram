@@ -32,20 +32,12 @@ import MenteePreferencesComponent from './subform/mentee-preferences/page';
 import MenteePreferences from '../redux/features/registration/state/preferences/menteePreferences';
 import PersonalityTypeComponent from './subform/personality-type/page';
 import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import database from '../firestore/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { Status } from '../redux/features/registration/state/dashboard/status/status';
+
 
 const Form = () => {
-  const app = initializeApp({
-    apiKey: "AIzaSyD34-PzQb_WxlQvRrt8a2vH5oUzmr0CzKk",
-    authDomain: "mentorshipapplicationform.firebaseapp.com",
-    projectId: "mentorshipapplicationform",
-    storageBucket: "mentorshipapplicationform.appspot.com",
-    messagingSenderId: "664284335203",
-    appId: "1:664284335203:web:459803b8dc8a1a6574bc56"
-  });
-  const firestore = getFirestore();
-
   const dispatch = useDispatch();
   const createAccountDetailsSelector = useSelector((state: RootState)=> state.registration.user);
   const mentorProfessionalDetailsSelector = useSelector((state: RootState)=> state.registration.mentorProfessionalDetailsData);
@@ -68,26 +60,61 @@ const Form = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const writePersonalDetailsData = doc(firestore, `mentor/mentorName1/personalDetails/mentorName1`);
+  const writeData = async () => {
+    const mainDocRef = await addDoc(collection(database, "Mentees"), {createdAt: serverTimestamp(), documentOf: createAnAccountData.fullName, status: Status.Incomplete});
 
-  const writeData = () =>{
-    const formData = {
-      fullName: createAnAccountData.fullName,
-      age: createAnAccountData.age ? createAnAccountData.age : 0,
-      phoneNumber: createAnAccountData.phoneNumber,
-      gender:  createAnAccountData.gender == undefined ? null : createAnAccountData.gender,
-      emailAddress: createAnAccountData.emailAddress,
-      mentor: createAnAccountData.mentor == undefined ? null : createAnAccountData.mentor,
-      mentee: createAnAccountData.mentee == undefined ? null : createAnAccountData.mentee,
-      undergrad_or_grad: createAnAccountData.undergrad_or_grad == undefined ? null : createAnAccountData.undergrad_or_grad,
-      postgrad: createAnAccountData.postgrad == undefined ? null : createAnAccountData.postgrad,
-      professional: createAnAccountData.professional == undefined ? null : createAnAccountData.professional,
-    }
-    setDoc(writePersonalDetailsData, formData);
-  }
+    const personalDetailsCollectionRef = collection(mainDocRef, "Personal Details");
+    await addDoc(personalDetailsCollectionRef, {
+        fullName: createAnAccountData.fullName,
+        age: createAnAccountData.age ? createAnAccountData.age : 0,
+        phoneNumber: createAnAccountData.phoneNumber,
+        gender: createAnAccountData.gender == undefined ? null : createAnAccountData.gender,
+        emailAddress: createAnAccountData.emailAddress,
+        mentor: createAnAccountData.mentor == undefined ? null : createAnAccountData.mentor,
+        mentee: createAnAccountData.mentee == undefined ? null : createAnAccountData.mentee,
+        undergrad_or_grad: createAnAccountData.currentStage == undefined ? null : createAnAccountData.currentStage
+    });
+
+    const backgroundDetailsCollectionRef = collection(mainDocRef, "Background Details");
+    await addDoc(backgroundDetailsCollectionRef, {
+        programs: menteeEducationalBackgroundData.programs,
+        majors: menteeEducationalBackgroundData.majors
+    });
+
+    const mentorPreferencesCollectionRef = collection(mainDocRef, "Preferences");
+    await addDoc(mentorPreferencesCollectionRef, {
+        preferences: menteePreferencesData.preferences
+    });
+
+    const skillsCollectionRef = collection(mainDocRef, "Skills");
+    await addDoc(skillsCollectionRef, {
+      basicSkills: {
+        firstBasicSoftSkill: skillsData.basicSkills.firstBasicSoftSkill,
+        firstBasicIndustrySkill: skillsData.basicSkills.firstBasicIndustrySkill,
+        secondBasicIndustrySkill: skillsData.basicSkills.secondBasicIndustrySkill
+      },
+      expertSkills: {
+        firstExpertSoftSkill: skillsData.expertSkills.firstExpertSoftSkill,
+        firstExpertIndustrySkill: skillsData.expertSkills.firstExpertIndustrySkill,
+        secondExpertIndustrySkill: skillsData.expertSkills.secondExpertIndustrySkill
+      }});
+
+    const goalsCollectionRef = collection(mainDocRef, "Goals");
+    await addDoc(goalsCollectionRef, {
+      longTermGoal: goalsData.longTermGoal,
+      firstShortTermGoal: goalsData.firstShortTermGoal,
+      secondShortTermGoal: goalsData.secondShortTermGoal
+    })
+
+    const personalityTypeCollectionRef = collection(mainDocRef, "Personality Type");
+    await addDoc(personalityTypeCollectionRef, {
+      personalityType: personalityTypeData.personalityType
+    })
+  };
 
   useEffect(()=>{
     activeStep === 7 ?  writeData() : console.log("none");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[activeStep])
 
   const handleNext = () => {
@@ -136,8 +163,8 @@ const Form = () => {
   })
 
   // useEffect(()=>{
-  //   console.log(activeStep, "current data", goalsData)
-  // }, [activeStep, goalsData])
+  //   console.log(activeStep, "datas", createAnAccountData, "currentstage", createAnAccountData.currentStage)
+  // }, [activeStep, createAnAccountData])
 
 
   const mentorSteps = [
@@ -182,13 +209,13 @@ const Form = () => {
     },
     {
       label: 'Background',
-      content: createAccountDetailsSelector.undergrad_or_grad || createAccountDetailsSelector.postgrad ? 
+      content: createAnAccountData.currentStage === "Undergraduate/Graduate" || createAnAccountData.currentStage === "Postgraduate" ? 
       <EducationalBackgroundComponent menteeEducationalBackgroundData={(data: EducationalBackground) => setMenteeEducationalBackgroundData(data)}/> 
-      : <Details mentorProfessionalDetailsData={(data: MentorProfessionalDetails) => setMentorProfessionalDetailsData(data)}/> 
+      : <Details mentorProfessionalDetailsData={(data: MentorProfessionalDetails) => setMentorProfessionalDetailsData(data)}/>
     },
     {
       label: 'Preferences',
-      content: <MenteePreferencesComponent mentorPreferencesData={(data: MenteePreferences)=> setMenteePreferencesData(data)}/>
+      content: <MenteePreferencesComponent menteePreferencesData={(data: MenteePreferences)=> setMenteePreferencesData(data)}/>
     },
     {
       label: 'Skills',

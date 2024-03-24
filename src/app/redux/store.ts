@@ -1,11 +1,13 @@
 'use client';
 
 import { configureStore } from "@reduxjs/toolkit";
-import registrationReducer from './features/registration/registrationSlice'
+import registrationReducer  from "./features/registration/registrationSlice";
+import dashboardReducer from "./features/registration/dashboardSlice";
 
 export const store = configureStore({
     reducer: {
-        registration: registrationReducer
+        registration: registrationReducer,
+        dashboard: dashboardReducer
     }
 })
 

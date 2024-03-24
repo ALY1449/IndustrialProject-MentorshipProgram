@@ -37,11 +37,25 @@ const MatchComponent: React.FC<ChildProps> = ({chosenMentee}) => {
             percentage: 90
         },
         {
-            name: 'Grace',
+            name: 'Chachot',
             skills: 40,
             goals: 70,
             personality: 90,
             percentage: 30
+        },
+        {
+            name: 'Ivan',
+            skills: 50,
+            goals: 20,
+            personality: 50,
+            percentage: 80
+        },
+        {
+            name: 'Matthew',
+            skills: 20,
+            goals: 40,
+            personality: 80,
+            percentage: 10
         }
     ]
 

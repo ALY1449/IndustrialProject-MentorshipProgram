@@ -17,8 +17,8 @@ const EducationalBackgroundComponent: React.FC<ChildProps> = (props) => {
         majors: educationalBackgroundState.majors
     });
 
-    const [chosenPrograms, setChosenPrograms] = React.useState<string[]>([]);
-    const [chosenMajors, setChosenMajors] = React.useState<string[]>([]);
+    const [chosenPrograms, setChosenPrograms] = React.useState<[]>([]);
+    const [chosenMajors, setChosenMajors] = React.useState<[]>([]);
 
     useEffect(() => {
         setEducationalBackground({

@@ -6,7 +6,5 @@ export interface UserState{
     emailAddress: string,
     mentor?: boolean
     mentee?: boolean,
-    undergrad_or_grad?: boolean,
-    postgrad?: boolean,
-    professional?: boolean;
+    currentStage?: string
 }

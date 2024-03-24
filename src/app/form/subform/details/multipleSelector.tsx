@@ -43,7 +43,6 @@ const MultipleSelector: React.FC<ChildProps> = ({data, dataStore}) => {
     );
   };
 
-  console.log()
   useEffect(()=>{
     dataStore(selectorData)
   // eslint-disable-next-line react-hooks/exhaustive-deps
