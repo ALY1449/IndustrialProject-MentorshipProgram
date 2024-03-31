@@ -34,7 +34,8 @@ import PersonalityTypeComponent from './subform/personality-type/page';
 import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
 import { personalDetailsSelector, menteeEducationalBackgroundSelector } from '../redux/selector';
 import { useAppDispatch } from '../redux/hooks';
-import { createUserDocument } from '../redux/features/registration/actions/actions';
+import { createMenteeDocument, createMentorDocument } from '../redux/features/registration/actions/actions';
+import { store } from '../redux/store';
 
 
 const Form = () => {
@@ -61,7 +62,7 @@ const Form = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   useEffect(()=>{
-    activeStep === 7 ?  dispatch(createUserDocument()) : console.log("none");
+    activeStep === 7 ?  (createAnAccountData.mentee ? dispatch(createMenteeDocument()) : dispatch(createMentorDocument())): console.log("none");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[activeStep])
 
@@ -78,9 +79,6 @@ const Form = () => {
     setActiveStep(0);
   };
 
-  // useEffect(()=>{
-  //   store.subscribe(() => console.log("update", store.getState()))
-  // }, [])
   
 
   useEffect(()=>{
@@ -114,9 +112,9 @@ const Form = () => {
     }
   })
 
-  // useEffect(()=>{
-  //   console.log(activeStep, "datas", createAnAccountData, "currentstage", createAnAccountData.currentStage)
-  // }, [activeStep, createAnAccountData])
+  useEffect(()=>{
+    console.log(activeStep, "states", store.getState())
+  }, [activeStep])
 
 
   const mentorSteps = [

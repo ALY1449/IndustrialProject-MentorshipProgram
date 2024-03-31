@@ -9,7 +9,7 @@ import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
 import { Skills } from "./state/skills/skills";
 import { PersonalityType } from "./state/personality-type/personalityType";
-import { createUserDocument } from "./actions/actions";
+import { createMenteeDocument, createMentorDocument, createUserDocument } from "./actions/actions";
 
 export interface registrationForm {
     user: UserState,
@@ -61,13 +61,13 @@ export const registrationSlice = createSlice({
         },
         mentorProfessionalDetails: (state, action: PayloadAction<MentorProfessionalDetails>) =>{
             state.mentorProfessionalDetailsData.jobTitle = action.payload.jobTitle;
-            state.mentorProfessionalDetailsData.industry= action.payload.industry;
+            state.mentorProfessionalDetailsData.organisation= action.payload.organisation;
             state.mentorProfessionalDetailsData.specialisation = action.payload.specialisation;
         },
         mentorPreferences: (state, action: PayloadAction<MentorPreferences>)=>{
-            state.mentorPreferences.undergrad_or_grad = action.payload.undergrad_or_grad;
-            state.mentorPreferences.postgrad = action.payload.postgrad;
-            state.mentorPreferences.professional = action.payload.professional;
+            state.mentorPreferences.preferences = action.payload.preferences;
+            state.mentorPreferences.specialisation = action.payload.specialisation;
+            state.mentorPreferences.otherSpecialisation = action.payload.otherSpecialisation
         },
         skills: (state, action: PayloadAction<Skills>)=>{ 
             state.skills.basicSkills.firstBasicSoftSkill= action.payload.basicSkills.firstBasicSoftSkill;
@@ -95,9 +95,13 @@ export const registrationSlice = createSlice({
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(createUserDocument.fulfilled, () => {
+        builder.addCase(createMenteeDocument.fulfilled, () => {
           // Add user to the state array
           console.log("created data")
+        }),
+        builder.addCase(createMentorDocument.fulfilled, () => {
+            // Add user to the state array
+            console.log("created data")
         })
     }
 })

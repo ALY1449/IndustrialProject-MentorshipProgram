@@ -20,10 +20,8 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                 emailAddress: mentorState.emailAddress,
                 mentor: mentorState.mentor,
                 mentee: undefined,
-                age: 0,
-                undergrad_or_grad: undefined,
-                postgrad: undefined,
-                professional: undefined
+                age: mentorState.age,
+                currentStage: mentorState.currentStage
             };
         } else {
             return {

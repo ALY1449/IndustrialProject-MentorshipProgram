@@ -1,5 +1,5 @@
 export interface MentorProfessionalDetails{
     jobTitle: string,
-    industry: string[],
+    organisation: string,
     specialisation: string
 }
