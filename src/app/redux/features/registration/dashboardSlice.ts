@@ -10,6 +10,7 @@ export interface dashboardData {
 
 const initialState: dashboardData = {
     home: {
+        id: "",
         avatar: "",
         fullName: "",
         registeredOn: "",
@@ -24,6 +25,7 @@ export const dashboardSlice = createSlice({
     initialState,
     reducers:{
         progressData: (state, action: PayloadAction<HomeTableData>) => {
+            state.home.id = action.payload.id,
             state.home.avatar = action.payload.avatar,
             state.home.fullName = action.payload.fullName,
             state.home.registeredOn = action.payload.registeredOn,

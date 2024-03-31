@@ -1,6 +1,7 @@
 import { Status } from "./status/status";
 
 export interface HomeTableData {
+    id: string
     avatar: string,
     fullName: string,
     registeredOn: string, //to be change

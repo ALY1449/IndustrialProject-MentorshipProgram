@@ -23,14 +23,14 @@ const MatchComponent: React.FC<ChildProps> = ({chosenMentee}) => {
 
     const arr = [
         {
-            name: 'Alyssa',
+            name: 'Ivan Dinglasan',
             skills: 30,
             goals: 20,
             personality: 50,
             percentage: 60
         },
         {
-            name: 'Ann',
+            name: 'Mentee Alyssa Test',
             skills: 20,
             goals: 50,
             personality: 80,

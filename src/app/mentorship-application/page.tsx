@@ -23,9 +23,7 @@ const MenteeMentorSelector = () =>{
         emailAddress: '',
         mentor: undefined,
         mentee: undefined,
-        undergrad_or_grad: undefined,
-        postgrad: undefined,
-        professional: undefined
+        currentStage: ''
     });
 
 

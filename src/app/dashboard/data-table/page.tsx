@@ -1,15 +1,19 @@
-'use client'
+'use client';
+
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
-import { Button } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, onSnapshot } from 'firebase/firestore';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '@/app/redux/hooks';
 import database from '@/app/firestore/firestore';
+import { dashboardData } from '@/app/redux/features/registration/dashboardSlice';
 
+
+const interface
 const DataTable: React.FC<ChildProps> = (props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [tabValue, setTabValue] = useState('1');
   const [rows, setRows] = useState([]);
 
@@ -18,7 +22,7 @@ const DataTable: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const querySnapshot = await getDocs(q);
-      const newRows = [];
+      const newRows: ((prevState: never[]) => never[]) | { id: string; avatar: string; fullName: any; registeredOn: any; status: any; assignedMentor: any; participatingAs: string; actions: string | undefined; }[] = [];
       querySnapshot.forEach((doc, index) => {
         // Construct new data object
         const newData = {
@@ -27,13 +31,15 @@ const DataTable: React.FC<ChildProps> = (props) => {
           fullName: doc.data()['documentOf'],
           registeredOn: doc.data()['createdAt'].toDate(),
           status: doc.data()['status'],
-          assignedMentor: doc.data()['assignedMentor']
+          assignedMentor: doc.data()['assignedMentor'], 
+          participatingAs: 'Mentee', 
+          actions: doc.data()['status'] == 'INCOMPLETE' ? 'Assign a mentor' : undefined
         };
         newRows.push(newData);
       });
       // Update the state with the new rows
       setRows(newRows);
-    };
+  }
 
     fetchData(); // Call the async function
   }, [q]);
@@ -46,18 +52,25 @@ const DataTable: React.FC<ChildProps> = (props) => {
 
   useEffect(() => {
     props.changeTab(tabValue);
-  }, [tabValue]);
+  }, [tabValue, props]); // Added props to the dependency array
 
   useEffect(() => {
     //dispatch(progressData());
-  });
+  }, [dispatch]); // Added dispatch to the dependency array
+
   const columns: GridColDef[] = [
     { field: 'avatar', headerName: 'Avatar', width: 200, renderCell: (avatarIcon) => <Avatar />},
     { field: 'fullName', headerName: 'Full Name', width: 227 },
-    { field: 'registeredOn', headerName: 'Registered On', width: 220 },
+    { field: 'registeredOn', headerName: 'Registered On', width: 270 },
+    {field: 'participatingAs', headerName: 'Participating as', width: 235, renderCell: (params) => <Chip label={params.value} />},
     { field: 'status', headerName: 'Status', width: 220, 
-      renderCell: (params) => 
-      <Button color={params.value === 'COMPLETED' ? 'success' : 'error'}>{params.value} </Button> },
+      renderCell: (params) => <Chip sx={{
+        height: 'auto',
+        '& .MuiChip-label': {
+          backgroundColor: '#FFCCCC'
+        },
+      }} 
+      label={params.value} />},
     { field: 'assignedMentor', headerName: 'Assigned Mentor', width: 220, renderCell: (params) => {
       const actions = params.row.actions;
       const menteeName = params.row.fullName;
@@ -73,10 +86,11 @@ const DataTable: React.FC<ChildProps> = (props) => {
   ];
 
   return (
-    <div style={{ height: 400, width: '100%', maxWidth: '83.2%' }}>
+    <div style={{ height: '100%', width: '100%', maxWidth: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
+        getRowId={(row: dashboardData["home"]) =>  row.id}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 10 },
@@ -84,7 +98,7 @@ const DataTable: React.FC<ChildProps> = (props) => {
         }}
         pageSizeOptions={[10, 15]}
         rowSelection
-        sx={{'& .MuiDataGrid-columnHeader': {backgroundColor:"#8F3880"}, 
+        sx={{'& .MuiDataGrid-columnHeader': {backgroundColor:"#8F3880", width: '100%'}, 
         '& .MuiDataGrid-columnHeaderTitle  ': {color: 'white'}}}
       />
     </div>

@@ -74,7 +74,7 @@ const Results: React.FC = ({data, dataOf}) => {
                             </Avatar>
                         </div>
                         <div style={{paddingTop: '10%', display: 'flex', justifyContent: 'center'}}>
-                            <Button variant="contained">Pair Up</Button>
+                            <Button variant="contained" onClick={() => console.log("pair up")}>Pair Up</Button>
                         </div>
                     </div>
                 </Grid>

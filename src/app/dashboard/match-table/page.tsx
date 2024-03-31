@@ -48,8 +48,8 @@ const rows = [
   createData(progressStatus.Completed, 'Avatar', 'Alyssa', 'Alan'),
   createData(progressStatus.Completed, 'Avatar', 'Ann', 'Mentor2'),
   createData(progressStatus.InProgress, 'Avatar', 'Grace', 'Mentor 3'),
-  createData(progressStatus.Completed, 'Avatar', 'Alyssa', 'Alan'),
-  createData(progressStatus.Completed, 'Avatar', 'Ann', 'Mentor2')
+  createData(progressStatus.Completed, 'Avatar', 'Alyssas', 'Alan'),
+  createData(progressStatus.Completed, 'Avatar', 'Hello', 'Mentor2')
 ];
 
 const MatchTableComponent: React.FC<ChildProps> = (props) => {

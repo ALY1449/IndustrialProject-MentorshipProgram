@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Container, TextField, Typography } from "@mui/material";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
 import { Skills } from "@/app/redux/features/registration/state/skills/skills";

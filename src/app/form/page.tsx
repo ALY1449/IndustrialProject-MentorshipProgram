@@ -13,7 +13,7 @@ import ProfilePhotoComponent from './subform/profile-photo/page';
 import CreateAccount from '../form/subform/create-account/page';
 import { useEffect, useState } from 'react';
 import { UserState } from '../redux/features/registration/state/user/user';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createAnAccount, mentorProfessionalDetails, skills, goals, mentorPreferences, 
   menteeEducationalBackground, menteePreferences, personalityType} from '../redux/features/registration/registrationSlice';
 import { RootState } from '../redux/store';
@@ -32,14 +32,14 @@ import MenteePreferencesComponent from './subform/mentee-preferences/page';
 import MenteePreferences from '../redux/features/registration/state/preferences/menteePreferences';
 import PersonalityTypeComponent from './subform/personality-type/page';
 import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
-import database from '../firestore/firestore';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { Status } from '../redux/features/registration/state/dashboard/status/status';
+import { personalDetailsSelector, menteeEducationalBackgroundSelector } from '../redux/selector';
+import { useAppDispatch } from '../redux/hooks';
+import { createUserDocument } from '../redux/features/registration/actions/actions';
 
 
 const Form = () => {
-  const dispatch = useDispatch();
-  const createAccountDetailsSelector = useSelector((state: RootState)=> state.registration.user);
+  const dispatch = useAppDispatch();
+  const createAccountDetailsSelector = useSelector(personalDetailsSelector);
   const mentorProfessionalDetailsSelector = useSelector((state: RootState)=> state.registration.mentorProfessionalDetailsData);
   const mentorPreferencesSelector = useSelector((state:RootState)=> state.registration.mentorPreferences);
   const skillsSelector = useSelector((state: RootState)=> state.registration.skills);
@@ -60,60 +60,8 @@ const Form = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const writeData = async () => {
-    const mainDocRef = await addDoc(collection(database, "Mentees"), {createdAt: serverTimestamp(), documentOf: createAnAccountData.fullName, status: Status.Incomplete});
-
-    const personalDetailsCollectionRef = collection(mainDocRef, "Personal Details");
-    await addDoc(personalDetailsCollectionRef, {
-        fullName: createAnAccountData.fullName,
-        age: createAnAccountData.age ? createAnAccountData.age : 0,
-        phoneNumber: createAnAccountData.phoneNumber,
-        gender: createAnAccountData.gender == undefined ? null : createAnAccountData.gender,
-        emailAddress: createAnAccountData.emailAddress,
-        mentor: createAnAccountData.mentor == undefined ? null : createAnAccountData.mentor,
-        mentee: createAnAccountData.mentee == undefined ? null : createAnAccountData.mentee,
-        undergrad_or_grad: createAnAccountData.currentStage == undefined ? null : createAnAccountData.currentStage
-    });
-
-    const backgroundDetailsCollectionRef = collection(mainDocRef, "Background Details");
-    await addDoc(backgroundDetailsCollectionRef, {
-        programs: menteeEducationalBackgroundData.programs,
-        majors: menteeEducationalBackgroundData.majors
-    });
-
-    const mentorPreferencesCollectionRef = collection(mainDocRef, "Preferences");
-    await addDoc(mentorPreferencesCollectionRef, {
-        preferences: menteePreferencesData.preferences
-    });
-
-    const skillsCollectionRef = collection(mainDocRef, "Skills");
-    await addDoc(skillsCollectionRef, {
-      basicSkills: {
-        firstBasicSoftSkill: skillsData.basicSkills.firstBasicSoftSkill,
-        firstBasicIndustrySkill: skillsData.basicSkills.firstBasicIndustrySkill,
-        secondBasicIndustrySkill: skillsData.basicSkills.secondBasicIndustrySkill
-      },
-      expertSkills: {
-        firstExpertSoftSkill: skillsData.expertSkills.firstExpertSoftSkill,
-        firstExpertIndustrySkill: skillsData.expertSkills.firstExpertIndustrySkill,
-        secondExpertIndustrySkill: skillsData.expertSkills.secondExpertIndustrySkill
-      }});
-
-    const goalsCollectionRef = collection(mainDocRef, "Goals");
-    await addDoc(goalsCollectionRef, {
-      longTermGoal: goalsData.longTermGoal,
-      firstShortTermGoal: goalsData.firstShortTermGoal,
-      secondShortTermGoal: goalsData.secondShortTermGoal
-    })
-
-    const personalityTypeCollectionRef = collection(mainDocRef, "Personality Type");
-    await addDoc(personalityTypeCollectionRef, {
-      personalityType: personalityTypeData.personalityType
-    })
-  };
-
   useEffect(()=>{
-    activeStep === 7 ?  writeData() : console.log("none");
+    activeStep === 7 ?  dispatch(createUserDocument()) : console.log("none");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[activeStep])
 
@@ -130,6 +78,10 @@ const Form = () => {
     setActiveStep(0);
   };
 
+  // useEffect(()=>{
+  //   store.subscribe(() => console.log("update", store.getState()))
+  // }, [])
+  
 
   useEffect(()=>{
     if(activeStep===1){
@@ -173,7 +125,7 @@ const Form = () => {
       content: <ProfilePhotoComponent/>
     },
     {
-      label: 'Create an Account',
+      label: 'Personal Details',
       content: <CreateAccount createAccountData={(data: UserState) => setCreateAccountData(data)}/>
     },
     {
@@ -204,7 +156,7 @@ const Form = () => {
       content: <ProfilePhotoComponent/>
     },
     {
-      label: 'Create an Account',
+      label: 'Personal Details',
       content: <CreateAccount createAccountData={(data: UserState) => setCreateAccountData(data)}/>
     },
     {

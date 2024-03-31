@@ -9,7 +9,7 @@ import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
 import { Skills } from "./state/skills/skills";
 import { PersonalityType } from "./state/personality-type/personalityType";
-import { HomeTableData } from "./state/dashboard/home-table-data";
+import { createUserDocument } from "./actions/actions";
 
 export interface registrationForm {
     user: UserState,
@@ -23,27 +23,10 @@ export interface registrationForm {
 }
 
 const initialState: registrationForm = {
-    user:{
-        fullName: "",
-        age: 0,
-        phoneNumber: '',
-        gender: '',
-        emailAddress: '',
-        mentor: undefined,
-        mentee: undefined,
-        currentStage: ''
-    },
-    mentorProfessionalDetailsData:{
-        jobTitle: '',
-        industry: [],
-        specialisation: ''
-    },
-    mentorPreferences:{
-        undergrad_or_grad: undefined,
-        postgrad: undefined,
-        professional: undefined
-    },
-    skills: {
+    user: {} as UserState,
+    mentorProfessionalDetailsData: {} as MentorProfessionalDetails,
+    mentorPreferences: {} as MentorPreferences,
+    skills:{
         basicSkills:{
             firstBasicSoftSkill: '',
             firstBasicIndustrySkill: '',
@@ -55,21 +38,10 @@ const initialState: registrationForm = {
             secondExpertIndustrySkill: ''
         },
     },
-    goals:{
-        longTermGoal: '',
-        firstShortTermGoal: '',
-        secondShortTermGoal: ''
-    },
-    menteeEducationalBackground:{
-        programs: [],
-        majors: []
-    },
-    menteePreferences: {
-        preferences: []
-    },
-    personalityType:{
-        personalityType: ''
-    }
+    goals: {} as Goals,
+    menteeEducationalBackground: {} as EducationalBackground,
+    menteePreferences: {} as MenteePreferences,
+    personalityType: {} as PersonalityType,
 };
 
 
@@ -120,8 +92,17 @@ export const registrationSlice = createSlice({
         personalityType: (state, action: PayloadAction<PersonalityType>) =>{
             state.personalityType.personalityType = action.payload.personalityType
         }
+    },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder.addCase(createUserDocument.fulfilled, () => {
+          // Add user to the state array
+          console.log("created data")
+        })
     }
 })
+
+
 
 export const {createAnAccount, mentorProfessionalDetails, mentorPreferences, skills, goals, menteeEducationalBackground, menteePreferences, personalityType} = registrationSlice.actions;
 export default registrationSlice.reducer;
