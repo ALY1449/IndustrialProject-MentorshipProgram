@@ -1,4 +1,18 @@
 export const PersonalityTypeData = [
+    'INTJ',
+    'INTP',
     'INFJ',
-    'INTJ'
+    'INFP',
+    'ISTJ',
+    'ISTP',
+    'ISFJ',
+    'ISFP',
+    'ESTJ',
+    'ESTP',
+    'ESFJ',
+    'ESPJ',
+    'ENTJ',
+    'ENFJ',
+    'ENFP',
+    'ENTP'
 ]

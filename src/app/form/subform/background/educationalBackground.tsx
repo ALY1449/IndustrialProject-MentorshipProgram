@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import MultipleSelector from "../details/multipleSelector";
 import industrySectorData from "../../data/industrySectorData";

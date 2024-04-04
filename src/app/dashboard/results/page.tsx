@@ -2,21 +2,30 @@
 import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Zoom, styled, tableCellClasses } from "@mui/material";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
+import { useAppDispatch } from "@/app/redux/hooks";
+import { updateDocStatus } from "@/app/redux/features/registration/actions/actions";
+import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data";
 
-interface DataItem {
-  name: string;
-  skills: number;
-  goals: number;
-  personality: number;
+
+interface MatchRow {
+  name: string,
+  skills: number,
+  goals: number,
+  personality: number,
   percentage: number
 }
-
 const Results: React.FC = ({data, dataOf}) => {
-  const [dataArr, setDataArr] = useState([]);
+  const [dataArr, setDataArr] = useState<MatchRow[]>([]);
+  const dispatch = useAppDispatch();
+
+  const changeStatus = async() => {
+    const name = dataOf;
+    dispatch(updateDocStatus(name));
+  }
 
   useEffect(() => {
     if (data) {
-      const foundItems = data.filter((item: string) => item.name === dataOf); 
+      const foundItems = data.filter((item: MatchRow) => item.name == dataOf); 
       setDataArr(foundItems); // Set dataArr to an array of found items
     } else {
       setDataArr([]); // Reset dataArr if data is undefined or null
@@ -73,8 +82,9 @@ const Results: React.FC = ({data, dataOf}) => {
                                 OP
                             </Avatar>
                         </div>
+                        
                         <div style={{paddingTop: '10%', display: 'flex', justifyContent: 'center'}}>
-                            <Button variant="contained" onClick={() => console.log("pair up")}>Pair Up</Button>
+                            <Button variant="contained" onClick={() => changeStatus()}>Pair Up</Button>
                         </div>
                     </div>
                 </Grid>

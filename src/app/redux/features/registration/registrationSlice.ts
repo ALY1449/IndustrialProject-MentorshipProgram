@@ -9,7 +9,9 @@ import EducationalBackground from "./state/background/educationalBackground";
 import MenteePreferences from "./state/preferences/menteePreferences";
 import { Skills } from "./state/skills/skills";
 import { PersonalityType } from "./state/personality-type/personalityType";
-import { createMenteeDocument, createMentorDocument, createUserDocument } from "./actions/actions";
+import { createMenteeDocument, createMentorDocument, fetchMenteeCollection } from "./actions/actions";
+import { HomeTableData } from "./state/dashboard/home-table-data";
+
 
 export interface registrationForm {
     user: UserState,
@@ -102,6 +104,9 @@ export const registrationSlice = createSlice({
         builder.addCase(createMentorDocument.fulfilled, () => {
             // Add user to the state array
             console.log("created data")
+        }),
+        builder.addCase(fetchMenteeCollection.fulfilled, (state, action)=>{
+            
         })
     }
 })

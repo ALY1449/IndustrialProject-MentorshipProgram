@@ -8,6 +8,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
+import { fetchMenteeCollection } from '@/app/redux/features/registration/actions/actions';
+import { useAppDispatch } from '@/app/redux/hooks';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/redux/store';
+import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
+import { Chip } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,7 +42,7 @@ enum progressStatus {
   };
 
 function createData(
-  progressStatus: progressStatus,
+  progressStatus: Status,
   avatar: string,
   name: string,
   mentor: string
@@ -44,16 +50,24 @@ function createData(
   return { progressStatus, avatar, name,mentor};
 }
 
-const rows = [
-  createData(progressStatus.Completed, 'Avatar', 'Alyssa', 'Alan'),
-  createData(progressStatus.Completed, 'Avatar', 'Ann', 'Mentor2'),
-  createData(progressStatus.InProgress, 'Avatar', 'Grace', 'Mentor 3'),
-  createData(progressStatus.Completed, 'Avatar', 'Alyssas', 'Alan'),
-  createData(progressStatus.Completed, 'Avatar', 'Hello', 'Mentor2')
-];
-
 const MatchTableComponent: React.FC<ChildProps> = (props) => {
+  const [rows, setRows] = useState<any[]>([]);
+  const dispatch = useAppDispatch();
   const [chosenName, setChosenName] = useState("");
+  const collectionData = useSelector((state: RootState)=> state.dashboard.rows)
+
+  useEffect(()=>{
+    dispatch(fetchMenteeCollection());
+  },[])
+
+  useEffect(() => {
+    // Map over the collectionData and create rows using createData function
+    const updatedRows = collectionData.map((data) =>
+      createData(data.status, data.avatar, data.fullName, data.assignedMentor)
+    );
+    setRows(updatedRows);
+  }, [collectionData]); // Update rows when collectionData changes
+
 
   useEffect(()=>{
     props.handleName(chosenName);
@@ -73,7 +87,13 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
         <TableBody>
           {rows.map((row) => ( 
             <StyledTableRow key={row.name} onClick={() => setChosenName(row.name)}>
-              <StyledTableCell component="th" scope="row">{row.progressStatus}</StyledTableCell>
+              <StyledTableCell component="th" scope="row"> 
+              {
+                <Chip 
+                color= {row.progressStatus == Status.Completed ? "success" : "error"}
+                label={row.progressStatus} />
+              }
+              </StyledTableCell>
               <StyledTableCell >{row.avatar}</StyledTableCell>
               <StyledTableCell>{row.name}</StyledTableCell>
               <StyledTableCell>{row.mentor}</StyledTableCell>

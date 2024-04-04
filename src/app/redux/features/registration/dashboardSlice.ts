@@ -2,37 +2,32 @@
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HomeTableData } from "./state/dashboard/home-table-data";
-import { Status } from "./state/dashboard/status/status";
+import { fetchMenteeCollection, updateDocStatus } from "./actions/actions";
 
-export interface dashboardData {
-    home: HomeTableData
+
+export interface HomeDataRows {
+    rows: HomeTableData[]
 }
 
-const initialState: dashboardData = {
-    home: {
-        id: "",
-        avatar: "",
-        fullName: "",
-        registeredOn: "",
-        status: Status.Incomplete,
-        mentor: "",
-        action: true
-    }
+const initialState: HomeDataRows = {
+    rows : []
 }
 
 export const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState,
     reducers:{
-        progressData: (state, action: PayloadAction<HomeTableData>) => {
-            state.home.id = action.payload.id,
-            state.home.avatar = action.payload.avatar,
-            state.home.fullName = action.payload.fullName,
-            state.home.registeredOn = action.payload.registeredOn,
-            state.home.status = action.payload.status,
-            state.home.mentor = action.payload.mentor,
-            state.home.action = action.payload.action
+        progressData: (state, action: PayloadAction<HomeTableData[]>) => {
+           state.rows = action.payload.slice(); // Update rows with new data
         }
+    },
+    extraReducers: (builder) => { 
+        builder.addCase(fetchMenteeCollection.fulfilled, (state, action)=>{
+            state.rows = action.payload;
+        })
+        builder.addCase(updateDocStatus.fulfilled, ()=>{
+            console.log("done");
+        })
     }
 })
 

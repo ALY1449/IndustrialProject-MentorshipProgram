@@ -4,22 +4,17 @@ import { Avatar, Box, Card, CircularProgress, Container, Grid, Paper } from "@mu
 import MatchTableComponent from "../match-table/page"
 import Results from "../results/page"
 import { useEffect, useState } from "react"
+import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data"
 
-const MatchComponent: React.FC<ChildProps> = ({chosenMentee}) => {
-    const [name, setName] = useState("");
+const MatchComponent: React.FC<ChildProps> = (props) => {
+    const [name, setName] = useState<HomeTableData>();
 
-    useEffect(()=>{
-        if(chosenMentee){
-            setName(chosenMentee)
-        }
-        else{
-            setName("");
-        }
-    }, [chosenMentee])
 
     useEffect(()=>{
-        console.log("name", name)
-    }, [name])
+        setName(props.chosenMentee);
+    }, [props.chosenMentee])
+
+
 
     const arr = [
         {
@@ -27,35 +22,40 @@ const MatchComponent: React.FC<ChildProps> = ({chosenMentee}) => {
             skills: 30,
             goals: 20,
             personality: 50,
-            percentage: 60
+            percentage: 60,
+            assignedMentor: 'Mentor 1'
         },
         {
             name: 'Mentee Alyssa Test',
             skills: 20,
             goals: 50,
             personality: 80,
-            percentage: 90
+            percentage: 90,
+            assignedMentor: 'Mentor 2'
         },
         {
-            name: 'Chachot',
+            name: 'Alyssa Pausanos',
             skills: 40,
             goals: 70,
             personality: 90,
-            percentage: 30
+            percentage: 30,
+            assignedMentor: 'Mentor 3'
         },
         {
-            name: 'Ivan',
+            name: 'testing',
             skills: 50,
             goals: 20,
             personality: 50,
-            percentage: 80
+            percentage: 80,
+            assignedMentor: 'Mentor 4'
         },
         {
-            name: 'Matthew',
+            name: 'Mentor 2 Full Name',
             skills: 20,
             goals: 40,
             personality: 80,
-            percentage: 10
+            percentage: 10,
+            assignedMentor: 'Mentor 5'
         }
     ]
 
@@ -65,12 +65,15 @@ const MatchComponent: React.FC<ChildProps> = ({chosenMentee}) => {
     return(
         <Box>
             <Grid container spacing={2}>
-                <Grid item xs={6}  >
+                <Grid item xs={name !== undefined ? 6 : 12}  >
                     {/* <DataTable/> */}
                     <MatchTableComponent handleName={(data: string)=> setName(data)}/>
                 </Grid>
-                <Grid item xs={6}>
-                    <Results data={arr} dataOf={name}/>
+                <Grid item xs={name !== undefined ? 6 : 12}>
+                    {name !== undefined ? 
+                        <Results data={arr} dataOf={name}/>
+                        : <div></div>
+                    }
                 </Grid>
             </Grid>
         </Box>

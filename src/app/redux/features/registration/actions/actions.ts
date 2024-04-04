@@ -1,8 +1,9 @@
 import database from "@/app/firestore/firestore";
 import { store } from "../../../store"
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { Status } from "../state/dashboard/status/status";
+import { HomeTableData } from "../state/dashboard/home-table-data";
 
 export const createMenteeDocument = createAsyncThunk(
     'registration/createMenteeDocument',
@@ -61,28 +62,45 @@ export const createMenteeDocument = createAsyncThunk(
 )
 
 export const fetchMenteeCollection = createAsyncThunk(
-    'dashboard/fetchMenteeCollection',
-    async () => {
-        const fetchData = async () => {
-            const querySnapshot = await getDocs(q);
-            const newRows = [];
-            querySnapshot.forEach((doc, index) => {
-              // Construct new data object
-              const newData = {
-                id: doc.data()['documentOf'] + '_' + index,
-                avatar: 'G',
-                fullName: doc.data()['documentOf'],
-                registeredOn: doc.data()['createdAt'].toDate(),
-                status: doc.data()['status'],
-                assignedMentor: doc.data()['assignedMentor'], 
-                participatingAs: 'Mentee', 
-                actions: doc.data()['status'] == 'INCOMPLETE' ? 'Assign a mentor' : undefined
-              };
-              newRows.push(newData);
-            });
-            // Update the state with the new rows
-            setRows(newRows);
-        }
+  'dashboard/fetchMenteeCollection',
+  async () => {
+      const newRows: HomeTableData[] = [];
+      const q = query(collection(database, "Mentees"), where("documentOf", "!=", null));
+      const r = query(collection(database, "Mentors"), where("documentOf", "!=", null));
+  
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // Construct new data object
+        const newData: HomeTableData = {
+          id: doc.data()['documentOf'] ,
+          avatar: 'G',
+          fullName: doc.data()['documentOf'],
+          registeredOn: doc.data()['createdAt'].toDate().toISOString(),
+          status: doc.data()['status'],
+          assignedMentor: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentor' : doc.data()['assignedMentor'],
+          participatingAs: 'Mentee', 
+          action: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentor' : doc.data()['assignedMentor']
+        };
+        newRows.push(newData);
+      });
+  
+      const querySnapshotMentor = await getDocs(r);
+      querySnapshotMentor.forEach((doc) => {
+        // Construct new data object
+        const newData: HomeTableData = {
+          id: doc.data()['documentOf'],
+          avatar: 'G',
+          fullName: doc.data()['documentOf'],
+          registeredOn: doc.data()['createdAt'].toDate().toISOString(),
+          status: doc.data()['status'],
+          assignedMentor: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentee' : 'Mentor Name',
+          participatingAs: 'Mentor', 
+          action: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentee' : 'Mentor Name'
+        };
+        newRows.push(newData);
+        
+      });
+      return newRows;
     }
 )
 
@@ -144,3 +162,26 @@ export const createMentorDocument = createAsyncThunk(
       })
   }
 )
+
+export const updateDocStatus = createAsyncThunk(
+  'registration/createMentorDocument',
+  async (data) => {
+    const name = data;
+    const q = query(collection(database, "Mentees"), where("documentOf", "==", name));
+    const querySnapshot = await getDocs(q);
+    // Iterate through the documents in the query result
+    querySnapshot.forEach(async (docSnapshot) => {
+      try {
+        // Update each document individually
+        const docRef = doc(database, 'Mentees', docSnapshot.id); // Get the document reference
+        await updateDoc(docRef, { 
+          status: Status.Completed,
+          assignedMentor: 'Mentor name' }); // Update the document
+        console.log('Document updated successfully');
+      } catch (error) {
+        console.error('Error updating document:', error);
+      }
+    });
+  }
+)
+

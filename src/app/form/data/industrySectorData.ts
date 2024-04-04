@@ -10,7 +10,8 @@ const industrySectorData = [
     'Telecommunications',
     'Robotics and Automation',
     'Manufacturing and Materials Science',
-    'Space Exploration and Astronomy'
+    'Space Exploration and Astronomy',
+    'Other'
 ];
 
 export default industrySectorData;

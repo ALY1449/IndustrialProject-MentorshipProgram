@@ -6,6 +6,7 @@ export interface HomeTableData {
     fullName: string,
     registeredOn: string, //to be change
     status: Status
-    mentor: string,
-    action: boolean
+    assignedMentor: string,
+    participatingAs: string,
+    action: string
 }
