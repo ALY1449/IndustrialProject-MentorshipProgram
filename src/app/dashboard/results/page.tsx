@@ -3,8 +3,9 @@ import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, 
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/app/redux/hooks";
-import { updateDocStatus } from "@/app/redux/features/registration/actions/actions";
+import { fetchMenteeCollection, updateDocStatus } from "@/app/redux/features/registration/actions/actions";
 import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data";
+import { store } from "@/app/redux/store";
 
 
 interface MatchRow {
@@ -21,7 +22,9 @@ const Results: React.FC = ({data, dataOf}) => {
   const changeStatus = async() => {
     const name = dataOf;
     dispatch(updateDocStatus(name));
+    dispatch(fetchMenteeCollection());
   }
+
 
   useEffect(() => {
     if (data) {

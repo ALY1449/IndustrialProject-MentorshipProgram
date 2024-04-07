@@ -58,7 +58,7 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
 
   useEffect(()=>{
     dispatch(fetchMenteeCollection());
-  },[])
+  },[dispatch])
 
   useEffect(() => {
     // Map over the collectionData and create rows using createData function
@@ -67,7 +67,6 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
     );
     setRows(updatedRows);
   }, [collectionData]); // Update rows when collectionData changes
-
 
   useEffect(()=>{
     props.handleName(chosenName);
