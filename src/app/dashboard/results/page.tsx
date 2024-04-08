@@ -3,9 +3,10 @@ import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, 
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/app/redux/hooks";
-import { fetchMenteeCollection, updateDocStatus } from "@/app/redux/features/registration/actions/actions";
+import { fetchMenteeCollection, getNoMentees, getNoMentors, getTotalMentees, getTotalMentors, updateDocStatus } from "@/app/redux/features/registration/actions/actions";
 import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data";
-import { store } from "@/app/redux/store";
+import { RootState, store } from "@/app/redux/store";
+import { useSelector } from "react-redux";
 
 
 interface MatchRow {
@@ -18,12 +19,15 @@ interface MatchRow {
 const Results: React.FC = ({data, dataOf}) => {
   const [dataArr, setDataArr] = useState<MatchRow[]>([]);
   const dispatch = useAppDispatch();
+  const noMentors = useSelector((state: RootState)=> state.dashboard.noMentors)
 
   const changeStatus = async() => {
     const name = dataOf;
     dispatch(updateDocStatus(name));
     dispatch(fetchMenteeCollection());
   }
+
+  
 
 
   useEffect(() => {

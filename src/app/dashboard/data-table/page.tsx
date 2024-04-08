@@ -11,7 +11,7 @@ import { RootState, store } from '@/app/redux/store';
 import { fetchMenteeCollection } from '@/app/redux/features/registration/actions/actions';
 import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
-import { red } from '@mui/material/colors';
+import PairingProgress from '../pairing-progress/page';
 
 
 const DataTable: React.FC<ChildProps> = (props) => {
@@ -60,44 +60,7 @@ const DataTable: React.FC<ChildProps> = (props) => {
 
   return (
     <Box>
-      <Container >
-      <Grid container maxWidth="60%">
-          <Grid item xs={3}>
-            <CircularProgress variant="determinate" value={25} size={100} />
-          </Grid>
-          <Grid item xs={3} direction="column">
-            <Grid
-                container
-                direction="column"
-                gap={2}
-              >
-              <Grid item xs={3} direction="column">
-                <Chip label="Mentors 100" variant="outlined" color= "secondary" />
-              </Grid>
-              <Grid item xs={3} direction="column">
-              <Chip label="No Mentors 50" variant="outlined" color= "secondary" />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={3}>
-            <CircularProgress variant="determinate" value={25} size={100}/>
-          </Grid>
-          <Grid item xs={3} direction="column">
-            <Grid
-                container
-                direction="column"
-                gap={2}
-              >
-              <Grid item xs={3} direction="column">
-                <Chip label="Mentees 100" variant="outlined" color= "secondary" />
-              </Grid>
-              <Grid item xs={3} direction="column">
-              <Chip label="No Mentees 50" variant="outlined" color= "secondary" />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Container>
+      <PairingProgress/>
         <div style={{ height: '100%', width: '100%', maxWidth: '100%' }}>
         <DataGrid
           rows={rows}

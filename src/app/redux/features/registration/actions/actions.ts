@@ -1,7 +1,7 @@
 import database from "@/app/firestore/firestore";
 import { store } from "../../../store"
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where, onSnapshot, getDoc} from "firebase/firestore";
 import { Status } from "../state/dashboard/status/status";
 import { HomeTableData } from "../state/dashboard/home-table-data";
 
@@ -67,7 +67,8 @@ export const fetchMenteeCollection = createAsyncThunk(
       const newRows: HomeTableData[] = [];
       const q = query(collection(database, "Mentees"), where("documentOf", "!=", null));
       const r = query(collection(database, "Mentors"), where("documentOf", "!=", null));
-  
+
+
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // Construct new data object
@@ -169,6 +170,10 @@ export const updateDocStatus = createAsyncThunk(
     const name = data;
     const q = query(collection(database, "Mentees"), where("documentOf", "==", name));
     const querySnapshot = await getDocs(q);
+    
+    // Array to hold all documents including the updated one
+    const updatedDocuments: HomeTableData[] = [];
+    
     // Iterate through the documents in the query result
     querySnapshot.forEach(async (docSnapshot) => {
       try {
@@ -177,11 +182,105 @@ export const updateDocStatus = createAsyncThunk(
         await updateDoc(docRef, { 
           status: Status.Completed,
           assignedMentor: 'Mentor name' }); // Update the document
+        
+        // Fetch the updated document
+        const updatedDocSnapshot = await getDoc(docRef);
+
+        if (updatedDocSnapshot.exists()) { // Check if the document exists
+          // Add the updated document to the array
+          updatedDocuments.push(updatedDocSnapshot.data() as HomeTableData);
+        } else {
+          console.error('Document does not exist or data is undefined');
+        }
+        
         console.log('Document updated successfully');
       } catch (error) {
         console.error('Error updating document:', error);
       }
     });
+    
+    return updatedDocuments; // Return all documents including the updated one
+  }
+);
+
+
+export const onChanges = createAsyncThunk(
+  'registration/onChanges',
+  async() =>{
+    const newRows: HomeTableData[] = [];
+    const q = query(collection(database, "Mentees"), where("documentOf", "!=", null));
+    const unsubscribe = onSnapshot(collection(database, "cities"), async () => {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // Construct new data object
+        const newData: HomeTableData = {
+          id: doc.data()['documentOf'] ,
+          avatar: 'G',
+          fullName: doc.data()['documentOf'],
+          registeredOn: doc.data()['createdAt'].toDate().toISOString(),
+          status: doc.data()['status'],
+          assignedMentor: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentor' : doc.data()['assignedMentor'],
+          participatingAs: 'Mentee', 
+          action: doc.data()['status'] === 'INCOMPLETE' ? 'Assign a mentor' : doc.data()['assignedMentor']
+        };
+        newRows.push(newData);
+      });
+      console.log("reading")
+    });
+    return newRows;
+})
+
+export const getTotalMentors = createAsyncThunk('dashboard/getTotalMentors',
+  async() =>{
+      let totalMentors = 0;
+      const q = query(collection(database, "Mentors"), where("documentOf", "!=", null));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        totalMentors+=1;
+      });
+      return totalMentors
+
   }
 )
 
+export const getTotalMentees = createAsyncThunk('dashboard/getTotalMentees',
+  async() =>{
+      let totalMentees= 0;
+      const q = query(collection(database, "Mentees"), where("documentOf", "!=", null));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(() => {
+        totalMentees+=1;
+      });
+      return totalMentees
+  }
+)
+
+export const getNoMentors = createAsyncThunk('dashboard/getNoMentors',
+  async() =>{
+      let total =0;
+      const q = query(collection(database, "Mentees"), where("status", "==", Status.Incomplete));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(() => {
+        total+=1;
+      });
+      return total
+
+  }
+)
+
+export const getNoMentees = createAsyncThunk('dashboard/getNoMentees',
+  async() =>{
+      let total =0;
+      const q = query(collection(database, "Mentors"), where("status", "==", Status.Incomplete));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(() => {
+        total+=1;
+      });
+      return total
+
+  }
+)
