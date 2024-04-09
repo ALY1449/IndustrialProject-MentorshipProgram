@@ -19,7 +19,7 @@ interface MatchRow {
 const Results: React.FC = ({data, dataOf}) => {
   const [dataArr, setDataArr] = useState<MatchRow[]>([]);
   const dispatch = useAppDispatch();
-  const noMentors = useSelector((state: RootState)=> state.dashboard.noMentors)
+  const [chosenDataOf, setChosen] = useState<HomeTableData>(dataOf);
 
   const changeStatus = async() => {
     const name = dataOf;
@@ -27,17 +27,20 @@ const Results: React.FC = ({data, dataOf}) => {
     dispatch(fetchMenteeCollection());
   }
 
-  
+  useEffect(()=>{
+    setChosen(dataOf)
+  },[dataOf])
 
 
   useEffect(() => {
     if (data) {
-      const foundItems = data.filter((item: MatchRow) => item.name == dataOf); 
+      const foundItems = data.filter((item: MatchRow) => item.name == chosenDataOf.fullName); 
       setDataArr(foundItems); // Set dataArr to an array of found items
     } else {
       setDataArr([]); // Reset dataArr if data is undefined or null
     }
-  }, [data, dataOf]); // Add dataOf as a dependency
+  }, [data, chosenDataOf.fullName]); // Add dataOf as a dependency
+
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {

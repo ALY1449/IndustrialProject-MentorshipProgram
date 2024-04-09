@@ -6,7 +6,11 @@ import { MentorProfessionalDetails } from "@/app/redux/features/registration/sta
 import { mentorProfessionalDetailsSelector } from "@/app/redux/selector";
 import { useSelector } from "react-redux";
 
-const Details: React.FC<ChildProps> = (props) => {
+interface MentorProfessionalDetailsDataProps{
+    mentorProfessionalDetailsData: (data: MentorProfessionalDetails) => void
+}
+
+const Details: React.FC<MentorProfessionalDetailsDataProps> = ({mentorProfessionalDetailsData}) => {
     const professionalDetailsState = useSelector(mentorProfessionalDetailsSelector);
      const [mentorDetails, setMentorDetails] = useState<MentorProfessionalDetails>({
         jobTitle: professionalDetailsState.jobTitle,
@@ -22,7 +26,7 @@ const Details: React.FC<ChildProps> = (props) => {
     }
 
     useEffect(()=>{
-        props.mentorProfessionalDetailsData(mentorDetails);
+        mentorProfessionalDetailsData(mentorDetails);
     })
 
     return(

@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/redux/store';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
 import { Chip } from '@mui/material';
+import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,25 +36,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-enum progressStatus {
-    Completed = 'Completed',
-    InProgress = 'In Progress',
-    Unassigned = 'Assign a mentor'
-  };
 
 function createData(
-  progressStatus: Status,
   avatar: string,
-  name: string,
-  mentor: string
+  fullName: string,
+  status: Status,
+  assignedMentor: string,
 ) {
-  return { progressStatus, avatar, name,mentor};
+  return { avatar, fullName, status, assignedMentor};
 }
 
 const MatchTableComponent: React.FC<ChildProps> = (props) => {
   const [rows, setRows] = useState<any[]>([]);
   const dispatch = useAppDispatch();
-  const [chosenName, setChosenName] = useState("");
+  const [chosenName, setChosenName] = useState<HomeTableData>();
   const collectionData = useSelector((state: RootState)=> state.dashboard.rows)
 
   useEffect(()=>{
@@ -63,7 +59,7 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     // Map over the collectionData and create rows using createData function
     const updatedRows = collectionData.map((data) =>
-      createData(data.status, data.avatar, data.fullName, data.assignedMentor)
+      createData(data.avatar, data.fullName, data.status, data.assignedMentor)
     );
     setRows(updatedRows);
   }, [collectionData]); // Update rows when collectionData changes
@@ -85,17 +81,17 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => ( 
-            <StyledTableRow key={row.name} onClick={() => setChosenName(row.name)}>
+            <StyledTableRow key={row.fullName} onClick={() => setChosenName(row)}>
               <StyledTableCell component="th" scope="row"> 
               {
                 <Chip 
-                color= {row.progressStatus == Status.Completed ? "success" : "error"}
-                label={row.progressStatus} />
+                color= {row.status == Status.Completed ? "success" : "error"}
+                label={row.status} />
               }
               </StyledTableCell>
               <StyledTableCell >{row.avatar}</StyledTableCell>
-              <StyledTableCell>{row.name}</StyledTableCell>
-              <StyledTableCell>{row.mentor}</StyledTableCell>
+              <StyledTableCell>{row.fullName}</StyledTableCell>
+              <StyledTableCell>{row.assignedMentor}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

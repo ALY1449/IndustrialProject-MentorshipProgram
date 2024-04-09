@@ -7,7 +7,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
-const MenteePreferencesComponent: React.FC<ChildProps> = (props) => {
+interface MenteePreferencesDataProps{
+    menteePreferencesData: (data: MenteePreferences) => void; 
+}
+const MenteePreferencesComponent: React.FC<MenteePreferencesDataProps> = ({menteePreferencesData}) => {
     const menteePreferencesState = useSelector((state: RootState)=> state.registration.menteePreferences);
     const [menteePreferences, setMenteePreferences] = useState<MenteePreferences>({
         preferences:menteePreferencesState.preferences
@@ -22,7 +25,7 @@ const MenteePreferencesComponent: React.FC<ChildProps> = (props) => {
     }, [chosenPreferences]);
     
     useEffect(()=>{
-        props.menteePreferencesData(menteePreferences)
+        menteePreferencesData(menteePreferences)
     })
     
     return(

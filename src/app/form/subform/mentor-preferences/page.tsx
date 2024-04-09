@@ -10,7 +10,11 @@ import React from "react";
 import { mentorPreferencesSelector } from "@/app/redux/selector";
 import { useSelector } from "react-redux";
 
-const Preferences: React.FC<ChildProps> = (props) =>{
+interface MentorProfessionalDetailsDataProps{
+    mentorPreferencesData: (data: MentorPreferences) => void;
+}
+
+const Preferences: React.FC<MentorProfessionalDetailsDataProps> = ({mentorPreferencesData}) =>{
     const mentorPreferencesState = useSelector(mentorPreferencesSelector);
     const [chosenPreferences, setChosenPreferences] = React.useState<[]>([]);
     const [mentorPreferences, setMentorPreferences]= useState<MentorPreferences>({
@@ -30,7 +34,7 @@ const Preferences: React.FC<ChildProps> = (props) =>{
     }, [chosenOtherSpecialisation, chosenPreferences, chosenSpecialisation]);
     
     useEffect(()=>{
-       props.mentorPreferencesData(mentorPreferences)
+       mentorPreferencesData(mentorPreferences)
     });
 
     

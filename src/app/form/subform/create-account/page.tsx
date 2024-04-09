@@ -7,7 +7,12 @@ import '../style.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
-const CreateAccount: React.FC<ChildProps> = (props) => {
+interface CreateAccountProps {
+    createAccountData: (data: UserState) => void; 
+}
+
+const CreateAccount: React.FC<CreateAccountProps> = ({createAccountData}) => {
+
     const mentorState = useSelector((state: RootState)=> state.registration.user);
     const menteeState = useSelector((state: RootState)=> state.registration.user);
 
@@ -47,7 +52,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
     };
 
     useEffect(()=>{
-        props.createAccountData(values);
+        createAccountData(values);
     })
     
 
@@ -57,6 +62,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                 <div style={{display: 'flex', alignItems: 'center', gap: '10%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Full Name</Typography>
                         <TextField
+                            id="fullName"
                             sx={{ m: 1, width: '35ch' }}
                             onChange={(e) => handleChange('fullName', e.target.value)}
                             value={menteeState.fullName !== undefined ? menteeState.fullName : ''}
@@ -80,6 +86,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                     <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
                     <Typography sx={{margin:'1%'}}>Age</Typography>
                     <TextField
+                        id="age"
                         sx={{ m: 1, width: '35ch' }}
                         onChange={(e) => handleChange('age', e.target.value)}
                         value={menteeState.age  !== undefined ? menteeState.age : ""}
@@ -89,7 +96,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                 <div style={{display: 'flex', alignItems: 'center', gap: '6%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Email Address</Typography>
                     <TextField
-                        id="outlined-start-adornment"
+                        id="emailAddress"
                         sx={{ m: 1, width: '35ch' }}
                         onChange={(e) => handleChange('emailAddress', e.target.value)}
                         value={menteeState.emailAddress !== undefined ? menteeState.emailAddress : ''}
@@ -98,7 +105,7 @@ const CreateAccount: React.FC<ChildProps> = (props) => {
                 <div style={{display: 'flex', alignItems: 'center', gap: '5%', flexWrap: 'wrap'}}>
                     <Typography sx={{margin:'1%'}}>Phone Number</Typography>
                     <TextField
-                        id="outlined-start-adornment"
+                        id="phoneNumber"
                         sx={{ m: 1, width: '35ch' }}
                         onChange={(e) => handleChange('phoneNumber', e.target.value)}
                         value={menteeState.phoneNumber !== undefined ? menteeState.phoneNumber : ''}

@@ -9,7 +9,6 @@ import { HomeTableData } from "@/app/redux/features/registration/state/dashboard
 const MatchComponent: React.FC<ChildProps> = (props) => {
     const [name, setName] = useState<HomeTableData>();
 
-
     useEffect(()=>{
         setName(props.chosenMentee);
     }, [props.chosenMentee])
@@ -60,14 +59,14 @@ const MatchComponent: React.FC<ChildProps> = (props) => {
     ]
 
     useEffect(()=>{
-        console.log(name);
+        console.log("match page received name", name);
     }, [name])
     return(
         <Box>
             <Grid container spacing={2}>
                 <Grid item xs={name !== undefined ? 6 : 12}  >
                     {/* <DataTable/> */}
-                    <MatchTableComponent handleName={(data: string)=> setName(data)}/>
+                    <MatchTableComponent handleName={(data: HomeTableData)=> setName(data)}/>
                 </Grid>
                 <Grid item xs={name !== undefined ? 6 : 12}>
                     {name !== undefined ? 

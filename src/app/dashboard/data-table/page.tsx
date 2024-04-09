@@ -27,7 +27,7 @@ const DataTable: React.FC<ChildProps> = (props) => {
   
   useEffect(()=>{
     props.allocateMentee(chosenRowData)
-  },[chosenRowData, props])
+  },[chosenRowData])
 
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const DataTable: React.FC<ChildProps> = (props) => {
               paginationModel: { page: 0, pageSize: 20 },
             },
           }}
-          onCellClick={(e)=> e.field === 'action' ?  setChosenRowData(e.row) : console.log("none")}
+          onCellClick={(e)=> e.field === 'assignedMentor' ?  setChosenRowData(e.row) : console.log("no chosen cell")}
           pageSizeOptions={[20, 25]}
           rowSelection
           sx={{'& .MuiDataGrid-columnHeader': {backgroundColor:"#8F3880", width: '100%'}, 

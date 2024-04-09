@@ -17,9 +17,9 @@ export default function LabTabs() {
     setValue(newValue);
   };
 
-  // useEffect(()=>{
-  //   console.log("mentee", mentee)
-  // }, [mentee])
+  useEffect(()=>{
+    console.log("mentee", mentee)
+  }, [mentee])
 
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>

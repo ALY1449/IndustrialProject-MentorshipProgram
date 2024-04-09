@@ -7,7 +7,11 @@ import { Box, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const GoalsComponent: React.FC<ChildProps> = (props) =>{
+interface GoalsProps{
+    goalsData: (data: Goals) => void
+}
+
+const GoalsComponent: React.FC<GoalsProps> = ({goalsData}) =>{
     const userState = useSelector(personalDetailsSelector);
     const goalsState = useSelector((state: RootState)=>state.registration.goals);
     const [preferredgoals, setPreferredGoals] = useState<Goals>({
@@ -24,7 +28,7 @@ const GoalsComponent: React.FC<ChildProps> = (props) =>{
     }
 
     useEffect(()=>{
-        props.goalsData(preferredgoals);
+        goalsData(preferredgoals);
     })
     
     return(

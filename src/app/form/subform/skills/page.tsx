@@ -8,7 +8,11 @@ import { Skills } from "@/app/redux/features/registration/state/skills/skills";
 import { BasicSkills } from "@/app/redux/features/registration/state/skills/basicSkills";
 import { ExpertSkills } from "@/app/redux/features/registration/state/skills/expertSkills";
 
-const SkillsComponent: React.FC<ChildProps> = (props) =>{
+
+interface SkillsProps{
+    skills: (data: Skills) => void
+}
+const SkillsComponent: React.FC<SkillsProps> = ({skills}) =>{
     const skillState = useSelector((state: RootState)=> state.registration.skills);
 
     const [basicSkills, setBasicSkills] = useState<BasicSkills>({
@@ -23,7 +27,7 @@ const SkillsComponent: React.FC<ChildProps> = (props) =>{
         secondExpertIndustrySkill: skillState.expertSkills.secondExpertIndustrySkill
     })
 
-    const [skills, setSkills] = useState<Skills>({
+    const [userSkills, setUserSkills] = useState<Skills>({
         basicSkills: basicSkills,
         expertSkills: expertSkills
     })
@@ -43,11 +47,11 @@ const SkillsComponent: React.FC<ChildProps> = (props) =>{
     }
 
     useEffect(()=>{
-        setSkills({basicSkills, expertSkills})
+        setUserSkills({basicSkills, expertSkills})
     }, [basicSkills, expertSkills])
 
     useEffect(()=>{
-        props.skills(skills);
+        skills(userSkills);
     })
 
     return(

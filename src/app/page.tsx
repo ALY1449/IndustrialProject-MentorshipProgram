@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react';
+import React from 'react';
 import MenteeMentorSelector from './mentorship-application/page';
 import { Box, Container } from '@mui/material';
 
