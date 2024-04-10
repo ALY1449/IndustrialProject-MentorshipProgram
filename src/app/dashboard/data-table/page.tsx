@@ -18,7 +18,7 @@ interface DataTableProps{
   allocateMentee: (data: string) => void;
 }
 
-const DataTable: React.FC<DataTableProps> = ({changeTab, allocateMentee}) => {
+export default function DataTable({changeTab, allocateMentee}: DataTableProps){
   const dispatch = useAppDispatch();
   const [noMentorsChecked, setNoMentorsChecked] = React.useState(false);
   const [noMenteesChecked, setNoMenteesChecked] = React.useState(false);
@@ -154,4 +154,3 @@ const DataTable: React.FC<DataTableProps> = ({changeTab, allocateMentee}) => {
     </Box>
   );
 }
-export default DataTable;
