@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import React from 'react';
 import { Box, Container } from '@mui/material';
 import MenteeMentorSelector from './mentorship-application/page';
