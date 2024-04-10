@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { Typography } from "@mui/material";
 import LabTabs from "./tabs/page";
 

@@ -130,7 +130,6 @@ export const createMentorDocument = createAsyncThunk(
   }
 )
 
-
 export interface registrationForm {
     status: 'idle' | 'loading' | 'success' | 'error',
     user: UserState,
@@ -224,6 +223,9 @@ export const registrationSlice = createSlice({
                 // Add user to the state array
                 console.log("createMenteeDocument fulfilled");
                 state.status = 'success'
+            })
+            .addCase(createMentorDocument.pending, (state) => {
+                state.status = 'idle'
             })
             .addCase(createMentorDocument.fulfilled, () => {
                 // Add user to the state array

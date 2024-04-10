@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Zoom, styled, tableCellClasses } from "@mui/material";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
