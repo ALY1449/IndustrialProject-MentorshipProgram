@@ -1,6 +1,9 @@
 'use client';
 
 import * as React from 'react';
+import { store } from '../redux/store';
+import { useAppDispatch } from '../redux/hooks';
+import { createMenteeDocument, createMentorDocument } from '../redux/features/registration/actions/actions';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -32,10 +35,8 @@ import MenteePreferencesComponent from './subform/mentee-preferences/page';
 import MenteePreferences from '../redux/features/registration/state/preferences/menteePreferences';
 import PersonalityTypeComponent from './subform/personality-type/page';
 import { PersonalityType } from '../redux/features/registration/state/personality-type/personalityType';
-import { personalDetailsSelector, menteeEducationalBackgroundSelector } from '../redux/selector';
-import { useAppDispatch } from '../redux/hooks';
-import { createMenteeDocument, createMentorDocument } from '../redux/features/registration/actions/actions';
-import { store } from '../redux/store';
+import { personalDetailsSelector } from '../redux/selector';
+
 
 
 const Form = () => {
@@ -79,7 +80,6 @@ const Form = () => {
     setActiveStep(0);
   };
 
-  
 
   useEffect(()=>{
     if(activeStep===1){

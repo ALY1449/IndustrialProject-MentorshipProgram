@@ -9,10 +9,10 @@ import menteepic from '../../../public/pictures/menteepic.jpeg'
 import { useRouter } from 'next/navigation'
 import { UserState } from "../redux/features/registration/state/user/user";
 import { createAnAccount } from "../redux/features/registration/registrationSlice";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../redux/hooks";
 
 const MenteeMentorSelector = () =>{
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const mentorImageUrl = mentorpic.src;
     const menteeImageUrl = menteepic.src;
     const router = useRouter();

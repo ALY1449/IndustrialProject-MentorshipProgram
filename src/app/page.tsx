@@ -1,9 +1,9 @@
 'use client'
 import React from 'react';
-import MenteeMentorSelector from './mentorship-application/page';
 import { Box, Container } from '@mui/material';
+import MenteeMentorSelector from './mentorship-application/page';
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <Box>
       <Container>

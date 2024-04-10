@@ -6,7 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import DataTable from '../data-table/page';
 import MatchComponent from '../match/page';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MediaCard from '../card-media/page';
 
 export default function LabTabs() {
@@ -16,10 +16,6 @@ export default function LabTabs() {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-
-  useEffect(()=>{
-    console.log("mentee", mentee)
-  }, [mentee])
 
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>

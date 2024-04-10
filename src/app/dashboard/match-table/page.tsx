@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-import { fetchMenteeCollection } from '@/app/redux/features/registration/actions/actions';
+import { fetchMenteeCollection } from '@/app/redux/features/registration/dashboardSlice';
 import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/redux/store';
@@ -42,15 +42,22 @@ function createData(
   fullName: string,
   status: Status,
   assignedMentor: string,
+  participatingAs: string
 ) {
-  return { avatar, fullName, status, assignedMentor};
+  return { avatar, fullName, status, assignedMentor, participatingAs};
 }
 
-const MatchTableComponent: React.FC<ChildProps> = (props) => {
+interface MatchTableComponentProps{
+  handleName: (data: string) => void
+  receivedName: string
+}
+
+const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, receivedName}) => {
   const [rows, setRows] = useState<any[]>([]);
   const dispatch = useAppDispatch();
-  const [chosenName, setChosenName] = useState<HomeTableData>();
+  const [chosenName, setChosenName] = useState(receivedName);
   const collectionData = useSelector((state: RootState)=> state.dashboard.rows)
+  const R = require('ramda')
 
   useEffect(()=>{
     dispatch(fetchMenteeCollection());
@@ -59,39 +66,47 @@ const MatchTableComponent: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     // Map over the collectionData and create rows using createData function
     const updatedRows = collectionData.map((data) =>
-      createData(data.avatar, data.fullName, data.status, data.assignedMentor)
+      createData(data.avatar, data.fullName, data.status, data.assignedMentor, data.participatingAs)
     );
-    setRows(updatedRows);
-  }, [collectionData]); // Update rows when collectionData changes
+
+    const filterByStatus = R.filter((data: HomeTableData) => data.status == Status.Incomplete ||  data.status == Status.InProgress)
+    const sortByChosenName = R.sortWith([
+      R.descend((data: HomeTableData) => data.fullName == chosenName)
+    ]);
+    setRows(filterByStatus(sortByChosenName(sortByChosenName(updatedRows))));
+  }, [R, chosenName, collectionData]);
 
   useEffect(()=>{
-    props.handleName(chosenName);
-  },[chosenName]);
+    handleName(chosenName);
+  },[chosenName, handleName]);
   
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500}} aria-label="customized table">
+      <Table sx={{ minWidth: '100%'}} aria-label="customized table">
         <TableHead sx={{width: '100%'}}>
           <TableRow>
             <StyledTableCell>Progress Status</StyledTableCell>
             <StyledTableCell >Avatar</StyledTableCell>
             <StyledTableCell >Name</StyledTableCell>
-            <StyledTableCell >Mentor</StyledTableCell>
+            <StyledTableCell >Participating as</StyledTableCell>
+            <StyledTableCell >Paired with</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => ( 
-            <StyledTableRow key={row.fullName} onClick={() => setChosenName(row)}>
+            <StyledTableRow key={row.fullName} onClick={() => setChosenName(row.fullName)} 
+              sx={row.fullName == chosenName ? { '& .MuiTableCell-body': { backgroundColor: "#F4E6F2" } } : {backgroundColor: "white"}}>
               <StyledTableCell component="th" scope="row"> 
               {
                 <Chip 
-                color= {row.status == Status.Completed ? "success" : "error"}
+                color={row.status === Status.Completed ? "success" : (row.status === Status.InProgress ? "warning" : "error")}
                 label={row.status} />
               }
               </StyledTableCell>
               <StyledTableCell >{row.avatar}</StyledTableCell>
               <StyledTableCell>{row.fullName}</StyledTableCell>
-              <StyledTableCell>{row.assignedMentor}</StyledTableCell>
+              <StyledTableCell>{row.participatingAs}</StyledTableCell>
+              <StyledTableCell>{row.assignedMentor == 'In progress' ? '---': row.assignedMentor}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

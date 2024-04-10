@@ -1,38 +1,97 @@
 'use client';
 
 import * as React from 'react';
+import { RootState } from '@/app/redux/store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
-import { Box, Button, Chip, CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { Box, Button, Chip, Switch, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
-import { RootState, store } from '@/app/redux/store';
-import { fetchMenteeCollection } from '@/app/redux/features/registration/actions/actions';
+import { fetchMenteeCollection,updateDocInProgressStatus } from '@/app/redux/features/registration/dashboardSlice';
 import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
 import PairingProgress from '../pairing-progress/page';
 
+interface DataTableProps{
+  changeTab: (data: string) => void;
+  allocateMentee: (data: string) => void;
+}
 
-const DataTable: React.FC<ChildProps> = (props) => {
+const DataTable: React.FC<DataTableProps> = ({changeTab, allocateMentee}) => {
   const dispatch = useAppDispatch();
+  const [noMentorsChecked, setNoMentorsChecked] = React.useState(false);
+  const [noMenteesChecked, setNoMenteesChecked] = React.useState(false);
+  const R = require('ramda')
+
+  const handleNoMentorsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNoMentorsChecked(event.target.checked);
+  };
+
+  const handleNoMenteesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNoMenteesChecked(event.target.checked);
+  };
+
+
   const [tabValue, setTabValue] = useState('1');
   const rows = useSelector((state: RootState)=> state.dashboard.rows);
   const [chosenRowData, setChosenRowData] = useState<HomeTableData>(); 
+  const [filteredRows, setFilteredRows] = useState<HomeTableData[]>(rows);
+
 
   useEffect(()=>{
     dispatch(fetchMenteeCollection());
   },[dispatch])
 
+  const assignButton = (data:HomeTableData ) =>{
+    setChosenRowData(data);
+    dispatch(updateDocInProgressStatus(data));
+  }
+
+  useEffect(() => {
+    if (noMentorsChecked && noMenteesChecked) {
+      const newRows = rows.filter((data: HomeTableData) => {
+        return data.status === Status.Incomplete;
+      });
+      setFilteredRows(newRows);
+    } else if (noMentorsChecked) {
+      const newRows = rows.filter((data: HomeTableData) => {
+        return data.participatingAs === "Mentee" && data.status === Status.Incomplete;
+      });
+      setFilteredRows(newRows);
+    } else if (noMenteesChecked) {
+      const newRows = rows.filter((data: HomeTableData) => {
+        return data.participatingAs === "Mentor" && data.status === Status.Incomplete;
+      });
+      setFilteredRows(newRows);
+    } else {
+      const sortByStatus = R.sortBy((item: HomeTableData) => {
+        if (item.status === Status.InProgress) {
+          return 0; // "In Progress" comes first
+        } else if (item.status === Status.Incomplete) {
+          return 1; // "Incomplete" comes after "In Progress"
+        }
+        return 2; // Other statuses come last
+      });
+    
+      // Sort the array using the custom sorting function
+      const sortedData = sortByStatus(rows);
+      setFilteredRows(sortedData);
+    }
+  }, [R, noMenteesChecked, noMentorsChecked, rows]);
+  
   
   useEffect(()=>{
-    props.allocateMentee(chosenRowData)
-  },[chosenRowData])
+    if(chosenRowData){
+      allocateMentee(chosenRowData.fullName)
+    }
+  },[allocateMentee, chosenRowData])
 
 
   useEffect(() => {
-    props.changeTab(tabValue);
-  }, [tabValue, props]); // Added props to the dependency array
+    changeTab(tabValue);
+  }, [changeTab, tabValue]); // Added props to the dependency array
+
 
 
   const columns: GridColDef[] = [
@@ -43,39 +102,54 @@ const DataTable: React.FC<ChildProps> = (props) => {
     renderCell: (params) => <Chip label={params.value} variant="outlined" color= "secondary" />},
     { field: 'status', headerName: 'Status', width: 220, 
       renderCell: (params) => <Chip 
-      color= {params.value == Status.Completed ? "success" : "error"}
+      color= {params.value == Status.Completed ? "success" : (params.value == Status.InProgress) ? "warning" : "error"}
       label={params.value} />},
     { field: 'assignedMentor', headerName: 'Assigned Mentor/Mentee', width: 220, renderCell: (params) => {
       const actions = params.value;
       if (actions !== "Mentor name") {
-        return (
-          <Button variant="contained" value={params.value} color="secondary" onClick={()=> setTabValue('2')} >
-            {actions}
-          </Button>
-        );
+        if (actions !== "In progress") {
+          return(<Button variant="contained" value={params.value} color="secondary" onClick={()=> setTabValue('2')} >
+              {actions}
+            </Button>)
+        }
+        else{
+          return(<div></div>)
+        }
       }
-      return (<div style={{display:'flex', alignItems:'center', gap: '20px'}}><Avatar /> {params.value}</div>);
+      else{
+        return (<div style={{display:'flex', alignItems:'center', gap: '20px'}}><Avatar /> {params.value}</div>);
+      }
     }},
   ];
 
   return (
     <Box>
       <PairingProgress/>
+        <div style={{display: 'flex', alignItems:'center', justifyContent: 'right'}}>
+          <Switch checked={noMentorsChecked} onChange={handleNoMentorsChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
+          <Typography>No Mentors</Typography>
+          <Switch checked={noMenteesChecked} onChange={handleNoMenteesChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
+          <Typography>No Mentees</Typography>
+        </div>
         <div style={{ height: '100%', width: '100%', maxWidth: '100%' }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 20 },
-            },
-          }}
-          onCellClick={(e)=> e.field === 'assignedMentor' ?  setChosenRowData(e.row) : console.log("no chosen cell")}
-          pageSizeOptions={[20, 25]}
-          rowSelection
-          sx={{'& .MuiDataGrid-columnHeader': {backgroundColor:"#8F3880", width: '100%'}, 
-          '& .MuiDataGrid-columnHeaderTitle  ': {color: 'white'}}}
-        />
+        {filteredRows.length === 0 ? (
+            <div>No results</div>
+          ) : (
+            <DataGrid
+              rows={filteredRows}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 20 },
+                },
+              }}
+              onCellClick={(e)=> e.field === 'assignedMentor' && assignButton(e.row)}
+              pageSizeOptions={[20, 25]}
+              rowSelection
+              sx={{'& .MuiDataGrid-columnHeader': {backgroundColor:"#8F3880", width: '100%'}, 
+              '& .MuiDataGrid-columnHeaderTitle  ': {color: 'white'}}}
+            />
+          )}
       </div>
     </Box>
   );

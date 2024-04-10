@@ -3,27 +3,31 @@ import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, 
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/app/redux/hooks";
-import { fetchMenteeCollection, getNoMentees, getNoMentors, getTotalMentees, getTotalMentors, updateDocStatus } from "@/app/redux/features/registration/actions/actions";
-import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data";
-import { RootState, store } from "@/app/redux/store";
-import { useSelector } from "react-redux";
+import { fetchMenteeCollection, updateDocStatus } from "@/app/redux/features/registration/dashboardSlice";
 
 
-interface MatchRow {
+export interface MatchRow {
   name: string,
+  participatingAs: string,
   skills: number,
   goals: number,
   personality: number,
-  percentage: number
+  percentage: number,
+  assignedMentor: string
 }
-const Results: React.FC = ({data, dataOf}) => {
+
+interface ResultsProps{
+  data: MatchRow[],
+  dataOf: string
+}
+
+const Results: React.FC<ResultsProps> = ({data, dataOf}) => {
   const [dataArr, setDataArr] = useState<MatchRow[]>([]);
   const dispatch = useAppDispatch();
-  const [chosenDataOf, setChosen] = useState<HomeTableData>(dataOf);
+  const [chosenDataOf, setChosen] = useState("");
 
   const changeStatus = async() => {
-    const name = dataOf;
-    dispatch(updateDocStatus(name));
+    dispatch(updateDocStatus(dataArr[0]));
     dispatch(fetchMenteeCollection());
   }
 
@@ -34,12 +38,12 @@ const Results: React.FC = ({data, dataOf}) => {
 
   useEffect(() => {
     if (data) {
-      const foundItems = data.filter((item: MatchRow) => item.name == chosenDataOf.fullName); 
+      const foundItems = data.filter((item: MatchRow) => item.name == chosenDataOf); 
       setDataArr(foundItems); // Set dataArr to an array of found items
     } else {
       setDataArr([]); // Reset dataArr if data is undefined or null
     }
-  }, [data, chosenDataOf.fullName]); // Add dataOf as a dependency
+  }, [chosenDataOf, data]); // Add dataOf as a dependency
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -92,9 +96,8 @@ const Results: React.FC = ({data, dataOf}) => {
                                 OP
                             </Avatar>
                         </div>
-                        
                         <div style={{paddingTop: '10%', display: 'flex', justifyContent: 'center'}}>
-                            <Button variant="contained" onClick={() => changeStatus()}>Pair Up</Button>
+                            <Button variant="contained" onClick={(e) => changeStatus()}>Pair Up</Button>
                         </div>
                     </div>
                 </Grid>

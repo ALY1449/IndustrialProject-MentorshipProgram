@@ -1,13 +1,13 @@
 'use client';
 
-import { getNoMentees, getNoMentors, getTotalMentees, getTotalMentors } from "@/app/redux/features/registration/actions/actions";
+import { getNoMentees, getNoMentors, getTotalMentees, getTotalMentors } from "@/app/redux/features/registration/dashboardSlice";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { RootState } from "@/app/redux/store";
 import { Box, Chip, CircularProgress, Container, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const PairingProgress: React.FC<ChildProps> = (props) =>{
+const PairingProgress: React.FC = () =>{
     const dispatch = useAppDispatch();
     const totalMentors = useSelector((state: RootState) => state.dashboard.totalMentors)
     const totalMentees = useSelector((state: RootState) => state.dashboard.totalMentees)
@@ -24,43 +24,35 @@ const PairingProgress: React.FC<ChildProps> = (props) =>{
 
     return(
         <Box>
-            <Container >
+           <Container>
                 <Grid container maxWidth="60%">
                     <Grid item xs={3}>
                         <CircularProgress variant="determinate" value={25} size={100} />
                     </Grid>
-                    <Grid item xs={3} direction="column">
-                        <Grid
-                            container
-                            direction="column"
-                            gap={2}
-                        >
-                        <Grid item xs={3} direction="column">
-                            <Chip label={`Total mentors ${totalMentors}`} variant="outlined" color= "secondary" />
-                        </Grid>
-                        <Grid item xs={3} direction="column">
-                        <Chip label={`No Mentees ${noMentees}`} variant="outlined" color= "secondary" />
-                        </Grid>
+                    <Grid item xs={3}>
+                        <Grid container direction="column" spacing={2}>
+                            <Grid item>
+                                <Chip label={`Total mentors ${totalMentors}`} variant="outlined" color="secondary" />
+                            </Grid>
+                            <Grid item>
+                                <Chip label={`No Mentees ${noMentees}`} variant="outlined" color="secondary" />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={3}>
-                        <CircularProgress variant="determinate" value={50} size={100}/>
+                        <CircularProgress variant="determinate" value={50} size={100} />
                     </Grid>
-                    <Grid item xs={3} direction="column">
-                        <Grid
-                            container
-                            direction="column"
-                            gap={2}
-                        >
-                        <Grid item xs={3} direction="column">
-                        <Chip label={`Total mentees ${totalMentees}`} variant="outlined" color= "secondary" />
-                        </Grid>
-                        <Grid item xs={3} direction="column">
-                        <Chip label={`No mentors ${noMentors}`} variant="outlined" color= "secondary" />
-                        </Grid>
+                    <Grid item xs={3}>
+                        <Grid container direction="column" spacing={2}>
+                            <Grid item>
+                                <Chip label={`Total mentees ${totalMentees}`} variant="outlined" color="secondary" />
+                            </Grid>
+                            <Grid item>
+                                <Chip label={`No mentors ${noMentors}`} variant="outlined" color="secondary" />
+                            </Grid>
                         </Grid>
                     </Grid>
-                    </Grid>
+                </Grid>
             </Container>
         </Box>
     )

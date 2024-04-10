@@ -1,23 +1,25 @@
 'use client'
 
-import { Avatar, Box, Card, CircularProgress, Container, Grid, Paper } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import MatchTableComponent from "../match-table/page"
-import Results from "../results/page"
+import Results, { MatchRow } from "../results/page"
 import { useEffect, useState } from "react"
-import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data"
 
-const MatchComponent: React.FC<ChildProps> = (props) => {
-    const [name, setName] = useState<HomeTableData>();
+
+interface MatchComponentProps{
+    chosenMentee: string
+}
+const MatchComponent: React.FC<MatchComponentProps> = ({chosenMentee}) => {
+    const [name, setName] = useState(chosenMentee);
 
     useEffect(()=>{
-        setName(props.chosenMentee);
-    }, [props.chosenMentee])
+        setName(chosenMentee);
+    }, [chosenMentee])
 
-
-
-    const arr = [
+    const arr: MatchRow[] = [
         {
             name: 'Ivan Dinglasan',
+            participatingAs:'Mentee',
             skills: 30,
             goals: 20,
             personality: 50,
@@ -26,6 +28,7 @@ const MatchComponent: React.FC<ChildProps> = (props) => {
         },
         {
             name: 'Mentee Alyssa Test',
+            participatingAs:'Mentee',
             skills: 20,
             goals: 50,
             personality: 80,
@@ -34,6 +37,7 @@ const MatchComponent: React.FC<ChildProps> = (props) => {
         },
         {
             name: 'Alyssa Pausanos',
+            participatingAs:'Mentee',
             skills: 40,
             goals: 70,
             personality: 90,
@@ -42,6 +46,7 @@ const MatchComponent: React.FC<ChildProps> = (props) => {
         },
         {
             name: 'testing',
+            participatingAs:'Mentee',
             skills: 50,
             goals: 20,
             personality: 50,
@@ -50,23 +55,30 @@ const MatchComponent: React.FC<ChildProps> = (props) => {
         },
         {
             name: 'Mentor 2 Full Name',
+            participatingAs:'Mentor',
             skills: 20,
             goals: 40,
             personality: 80,
             percentage: 10,
             assignedMentor: 'Mentor 5'
+        },
+        {
+            name: 'Mentor testing',
+            participatingAs:'Mentor',
+            skills: 20,
+            goals: 40,
+            personality: 50,
+            percentage: 90,
+            assignedMentor: 'Mentor 6'
         }
     ]
 
-    useEffect(()=>{
-        console.log("match page received name", name);
-    }, [name])
     return(
         <Box>
             <Grid container spacing={2}>
                 <Grid item xs={name !== undefined ? 6 : 12}  >
                     {/* <DataTable/> */}
-                    <MatchTableComponent handleName={(data: HomeTableData)=> setName(data)}/>
+                    <MatchTableComponent handleName={(data: string)=> setName(data)} receivedName={name}/>
                 </Grid>
                 <Grid item xs={name !== undefined ? 6 : 12}>
                     {name !== undefined ? 
