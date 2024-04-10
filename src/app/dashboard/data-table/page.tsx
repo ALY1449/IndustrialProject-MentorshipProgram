@@ -13,12 +13,14 @@ import { HomeTableData } from '@/app/redux/features/registration/state/dashboard
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
 import PairingProgress from '../pairing-progress/page';
 
-interface DataTableProps{
+// Define the DataTableProps interface
+export interface DataTableProps {
   changeTab: (data: string) => void;
   allocateMentee: (data: string) => void;
 }
 
-export default function DataTable({changeTab, allocateMentee}: DataTableProps){
+// Define the DataTable component
+export default function DataTable({ changeTab, allocateMentee }: DataTableProps) {
   const dispatch = useAppDispatch();
   const [noMentorsChecked, setNoMentorsChecked] = React.useState(false);
   const [noMenteesChecked, setNoMenteesChecked] = React.useState(false);
