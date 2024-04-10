@@ -1,16 +1,17 @@
 'use client';
 
 import React from 'react';
-import { Box, Container } from '@mui/material';
-import MenteeMentorSelector from './mentorship-application/page';
+import { Box } from '@mui/material';
+import DashboardComponent from './dashboard/page';
 
 const Home: React.FC = () => {
   return (
     <Box>
-      <Container>
+      {/* <Container> */}
         {/* Render your components using the data fetched from Firebase */}
-        <MenteeMentorSelector />
-      </Container>
+        {/* <MenteeMentorSelector /> */}
+      {/* </Container> */}
+      <DashboardComponent/>
     </Box>
   );
 };
