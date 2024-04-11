@@ -72,10 +72,7 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
     );
 
     const filterByStatus = R.filter((data: HomeTableData) => data.status == Status.Incomplete ||  data.status == Status.InProgress)
-    const sortByChosenName = R.sortWith([
-      R.descend((data: HomeTableData) => data.fullName == chosenName)
-    ]);
-    setRows(filterByStatus(sortByChosenName(sortByChosenName(updatedRows))));
+    setRows(filterByStatus((updatedRows)));
   }, [R, chosenName, collectionData]);
 
   useEffect(()=>{
