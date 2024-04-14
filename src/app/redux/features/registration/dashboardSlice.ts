@@ -159,6 +159,34 @@ export const getTotalMentees = createAsyncThunk('dashboard/getTotalMentees',
   }
 )
 
+export const getWithMentors = createAsyncThunk('dashboard/getWithMentors',
+  async() =>{
+      let total =0;
+      const q = query(collection(database, "Mentees"), where("status", "==", Status.Completed));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(() => {
+        total+=1;
+      });
+      return total
+
+  }
+)
+
+export const getWithMentees = createAsyncThunk('dashboard/getWithMentees',
+  async() =>{
+      let total =0;
+      const q = query(collection(database, "Mentors"), where("status", "==", Status.Completed));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(() => {
+        total+=1;
+      });
+      return total
+
+  }
+)
+
 export const getNoMentors = createAsyncThunk('dashboard/getNoMentors',
   async() =>{
       let total =0;
@@ -194,6 +222,8 @@ export interface HomeDataRows {
     totalMentees: number
     noMentees: number
     noMentors: number
+    withMentees: number
+    withMentors: number
 }
 
 const initialState: HomeDataRows = {
@@ -203,6 +233,8 @@ const initialState: HomeDataRows = {
     totalMentees: 0,
     noMentees: 0,
     noMentors: 0,
+    withMentees: 0,
+    withMentors: 0
 }
 
 export const dashboardSlice = createSlice({
@@ -272,6 +304,12 @@ export const dashboardSlice = createSlice({
         }),
         builder.addCase(updateDocInProgressStatus.fulfilled, ()=>{
             console.log("inprogress status")
+        }),
+        builder.addCase(getWithMentees.fulfilled, (state, action)=>{
+          state.withMentees = action.payload
+        }),
+        builder.addCase(getWithMentors.fulfilled, (state, action)=>{
+          state.withMentors = action.payload
         })
     }
 })

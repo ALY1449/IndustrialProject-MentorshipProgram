@@ -1,6 +1,6 @@
 'use client';
 
-import { getNoMentees, getNoMentors, getTotalMentees, getTotalMentors } from "@/app/redux/features/registration/dashboardSlice";
+import { getNoMentees, getNoMentors, getTotalMentees, getTotalMentors, getWithMentees, getWithMentors } from "@/app/redux/features/registration/dashboardSlice";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { RootState } from "@/app/redux/store";
 import { Box, Chip, CircularProgress, Container, Grid } from "@mui/material";
@@ -13,6 +13,8 @@ const PairingProgress: React.FC = () =>{
     const totalMentees = useSelector((state: RootState) => state.dashboard.totalMentees)
     const noMentors = useSelector((state: RootState)=> state.dashboard.noMentors)
     const noMentees = useSelector((state: RootState)=> state.dashboard.noMentees)
+    const withMentors = useSelector((state: RootState)=> state.dashboard.withMentors)
+    const withMentees = useSelector((state: RootState)=> state.dashboard.withMentees)
 
 
     useEffect(()=>{
@@ -20,6 +22,8 @@ const PairingProgress: React.FC = () =>{
         dispatch(getTotalMentees());
         dispatch(getNoMentors());
         dispatch(getNoMentees());
+        dispatch(getWithMentors());
+        dispatch(getWithMentees());
     },[dispatch])
 
     return(
@@ -27,7 +31,7 @@ const PairingProgress: React.FC = () =>{
            <Container>
                 <Grid container maxWidth="60%">
                     <Grid item xs={3}>
-                        <CircularProgress variant="determinate" value={25} size={100} />
+                        <CircularProgress variant="determinate" value={(withMentees/totalMentors)*100} size={100} />
                     </Grid>
                     <Grid item xs={3}>
                         <Grid container direction="column" spacing={2}>
@@ -35,12 +39,15 @@ const PairingProgress: React.FC = () =>{
                                 <Chip label={`Total mentors ${totalMentors}`} variant="outlined" color="secondary" />
                             </Grid>
                             <Grid item>
-                                <Chip label={`No Mentees ${noMentees}`} variant="outlined" color="secondary" />
+                                <Chip label={`With Mentees ${withMentees}`} variant="outlined" color="secondary" />
+                            </Grid>
+                            <Grid item>
+                                <Chip label={`With No Mentees ${noMentees}`} variant="outlined" color="secondary" />
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={3}>
-                        <CircularProgress variant="determinate" value={50} size={100} />
+                        <CircularProgress variant="determinate" value={(withMentors/totalMentees)*100} size={100} />
                     </Grid>
                     <Grid item xs={3}>
                         <Grid container direction="column" spacing={2}>
@@ -48,7 +55,10 @@ const PairingProgress: React.FC = () =>{
                                 <Chip label={`Total mentees ${totalMentees}`} variant="outlined" color="secondary" />
                             </Grid>
                             <Grid item>
-                                <Chip label={`No mentors ${noMentors}`} variant="outlined" color="secondary" />
+                                <Chip label={`With Mentors ${withMentors}`} variant="outlined" color="secondary" />
+                            </Grid>
+                            <Grid item>
+                                <Chip label={`With No mentors ${noMentors}`} variant="outlined" color="secondary" />
                             </Grid>
                         </Grid>
                     </Grid>

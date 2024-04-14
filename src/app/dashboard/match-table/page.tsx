@@ -15,7 +15,7 @@ import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/redux/store';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
-import { Chip } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -76,8 +76,12 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
   }, [R, chosenName, collectionData]);
 
   useEffect(()=>{
-    handleName(chosenName);
-  },[chosenName, handleName]);
+    collectionData.map((data)=>{
+      if((data.fullName == chosenName) && data.status== Status.InProgress){
+        handleName(chosenName);
+      }
+    })
+  },[chosenName, collectionData, handleName]);
   
   return (
     <TableContainer component={Paper}>
@@ -88,7 +92,7 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
             <StyledTableCell >Avatar</StyledTableCell>
             <StyledTableCell >Name</StyledTableCell>
             <StyledTableCell >Participating as</StyledTableCell>
-            <StyledTableCell >Paired with</StyledTableCell>
+            <StyledTableCell >Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -105,7 +109,9 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
               <StyledTableCell >{row.avatar}</StyledTableCell>
               <StyledTableCell>{row.fullName}</StyledTableCell>
               <StyledTableCell>{row.participatingAs}</StyledTableCell>
-              <StyledTableCell>{row.assignedMentor == 'In progress' ? '---': row.assignedMentor}</StyledTableCell>
+              <StyledTableCell>{row.assignedMentor == 'In progress' ? '---': 
+                <Button variant="contained" value="Assign a mentor" color="secondary" onClick={()=> handleName(row.fullName)} >Assign a mentor</Button>}
+            </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
