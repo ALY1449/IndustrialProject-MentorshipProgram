@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RootState } from '@/app/redux/store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
-import { Box, Button, Chip, Switch, Typography } from '@mui/material';
+import { Box, Button, Chip, Switch, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
@@ -97,7 +97,7 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
 
 
   const columns: GridColDef[] = [
-    { field: 'avatar', headerName: 'Avatar', width: 200, renderCell: (avatarIcon) => <Avatar />},
+    { field: 'avatar', headerName: 'Avatar', width: 130, renderCell: (avatarIcon) => <Avatar />},
     { field: 'fullName', headerName: 'Full Name', width: 227 },
     { field: 'registeredOn', headerName: 'Registered On', width: 270 },
     {field: 'participatingAs', headerName: 'Participating as', width: 235, 
@@ -127,7 +127,7 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
   return (
     <Box>
       <PairingProgress/>
-        <div style={{display: 'flex', alignItems:'center', justifyContent: 'right'}}>
+        <div style={{display: 'flex', alignItems:'center', justifyContent: 'right', padding: '20px'}}>
           <Switch checked={noMentorsChecked} onChange={handleNoMentorsChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
           <Typography>No Mentors</Typography>
           <Switch checked={noMenteesChecked} onChange={handleNoMenteesChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
