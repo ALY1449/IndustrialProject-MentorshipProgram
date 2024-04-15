@@ -270,7 +270,8 @@ export const dashboardSlice = createSlice({
         builder.addCase(getNoMentees.rejected, (state)=>{
             state.status = 'error'
         }),
-        builder.addCase(updateDocInProgressStatus.fulfilled, ()=>{
+        builder.addCase(updateDocInProgressStatus.fulfilled, (state)=>{
+            state.status = 'success',
             console.log("inprogress status")
         })
     }

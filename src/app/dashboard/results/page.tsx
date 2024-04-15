@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Zoom, styled, tableCellClasses } from "@mui/material";
+import { Alert, Avatar, Button, Card, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, tableCellClasses } from "@mui/material";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/app/redux/hooks";
@@ -26,9 +26,19 @@ const Results: React.FC<ResultsProps> = ({data, dataOf}) => {
   const [dataArr, setDataArr] = useState<MatchRow[]>([]);
   const dispatch = useAppDispatch();
   const [chosenDataOf, setChosen] = useState("");
+  const [successAlert, setSuccessAlert] = useState(false)
 
   const changeStatus = async() => {
-    dispatch(updateDocStatus(dataArr[0]));
+    dispatch(updateDocStatus(dataArr[0])).then((result)=>{
+      if(result.meta.requestStatus == "fulfilled"){
+        setSuccessAlert(true); 
+        setTimeout(() => {
+          // After a couple of seconds, set successAlert to false
+          // Assuming successAlert is a state variable
+          setSuccessAlert(false);
+        }, 3000); // Adjust the delay as needed, here 2000 milliseconds (2 seconds)
+      }
+    })
     dispatch(fetchMenteeCollection());
   }
 
@@ -72,6 +82,9 @@ const Results: React.FC<ResultsProps> = ({data, dataOf}) => {
 
     return( 
         <TableContainer component={Paper}>
+        {successAlert && <Alert variant="filled" severity="success">
+          This is a filled success Alert.
+        </Alert>}
         <Table aria-label="customized table">
           <TableHead sx={{width: '100%'}}>
             <TableRow>

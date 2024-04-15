@@ -10,12 +10,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-import { fetchMenteeCollection } from '@/app/redux/features/registration/dashboardSlice';
+import { fetchMenteeCollection, updateDocInProgressStatus } from '@/app/redux/features/registration/dashboardSlice';
 import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/redux/store';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
-import { Chip } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -75,9 +75,34 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
     setRows(filterByStatus((updatedRows)));
   }, [R, chosenName, collectionData]);
 
+
+  const assignButton = (name: string) =>{
+    setChosenName(name)
+    handleName(name)
+    const foundData = collectionData.find((data: HomeTableData)=>{
+      if(data.fullName == name){
+        return data
+      }
+    })
+
+    if (foundData){
+      dispatch(updateDocInProgressStatus(foundData))
+      dispatch(fetchMenteeCollection());
+    }
+  }
+  
+
   useEffect(()=>{
-    handleName(chosenName);
-  },[chosenName, handleName]);
+    const foundData = collectionData.find((data: HomeTableData)=>{
+      if((data.fullName == chosenName) && (data.status == Status.InProgress)) {
+        return data
+      }
+    })
+    if(foundData){
+      handleName(foundData.fullName)
+    }
+  },[chosenName, collectionData, handleName])
+ 
   
   return (
     <TableContainer component={Paper}>
@@ -93,8 +118,8 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
         </TableHead>
         <TableBody>
           {rows.map((row) => ( 
-            <StyledTableRow key={row.fullName} onClick={() => setChosenName(row.fullName)} 
-              sx={row.fullName == chosenName ? { '& .MuiTableCell-body': { backgroundColor: "#F4E6F2" } } : {backgroundColor: "white"}}>
+            <StyledTableRow key={row.fullName} onClick={()=> setChosenName(row.fullName)}
+              sx={((row.fullName == chosenName) && (row.status == Status.InProgress)) ? { '& .MuiTableCell-body': { backgroundColor: "#F4E6F2" } } : {backgroundColor: "white"}}>
               <StyledTableCell component="th" scope="row"> 
               {
                 <Chip 
@@ -105,7 +130,11 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({handleName, re
               <StyledTableCell >{row.avatar}</StyledTableCell>
               <StyledTableCell>{row.fullName}</StyledTableCell>
               <StyledTableCell>{row.participatingAs}</StyledTableCell>
-              <StyledTableCell>{row.assignedMentor == 'In progress' ? '---': row.assignedMentor}</StyledTableCell>
+              <StyledTableCell>{row.assignedMentor == 'In progress' ? '---': 
+                <Button variant="contained" value={row.assignedMentor} color="secondary" onClick={()=> assignButton(row.fullName)} >
+                {row.assignedMentor}
+              </Button>}
+             </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

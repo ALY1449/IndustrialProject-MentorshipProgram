@@ -40,15 +40,14 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
   const [chosenRowData, setChosenRowData] = useState<HomeTableData>(); 
   const [filteredRows, setFilteredRows] = useState<HomeTableData[]>(rows);
 
-
-  useEffect(()=>{
-    dispatch(fetchMenteeCollection());
-  },[dispatch])
-
   const assignButton = (data:HomeTableData ) =>{
     setChosenRowData(data);
     dispatch(updateDocInProgressStatus(data));
   }
+
+  useEffect(()=>{
+    dispatch(fetchMenteeCollection());
+  },[dispatch])
 
   useEffect(() => {
     if (noMentorsChecked && noMenteesChecked) {
@@ -89,6 +88,7 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
     }
   },[allocateMentee, chosenRowData])
 
+ 
 
   useEffect(() => {
     changeTab(tabValue);

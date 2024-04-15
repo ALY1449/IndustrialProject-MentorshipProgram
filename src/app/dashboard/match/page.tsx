@@ -70,6 +70,15 @@ const MatchComponent: React.FC<MatchComponentProps> = ({chosenMentee}) => {
             personality: 50,
             percentage: 90,
             assignedMentor: 'Mentor 6'
+        },
+        {
+            name: 'Mentor Name',
+            participatingAs:'Mentor',
+            skills: 20,
+            goals: 40,
+            personality: 50,
+            percentage: 100,
+            assignedMentor: 'Mentor 7'
         }
     ]
 
