@@ -4,13 +4,15 @@ import * as React from 'react';
 import { RootState } from '@/app/redux/store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
-import { Box, Button, Chip, Switch, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Chip, Paper, Stack, Switch, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/redux/hooks';
 import { useSelector } from 'react-redux';
 import { fetchMenteeCollection,updateDocInProgressStatus } from '@/app/redux/features/registration/dashboardSlice';
 import { HomeTableData } from '@/app/redux/features/registration/state/dashboard/home-table-data';
 import { Status } from '@/app/redux/features/registration/state/dashboard/status/status';
+import mentorpic from '../../../../public/pictures/mentorpic.png'
+import BasicDateCalendar from '../calendar/calendar';
 import PairingProgress from '../pairing-progress/page';
 
 // Define the DataTableProps interface
@@ -34,7 +36,7 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
     setNoMenteesChecked(event.target.checked);
   };
 
-
+  const mentorImageUrl = mentorpic.src;
   const [tabValue, setTabValue] = useState('1');
   const rows = useSelector((state: RootState)=> state.dashboard.rows);
   const [chosenRowData, setChosenRowData] = useState<HomeTableData>(); 
@@ -126,14 +128,30 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
 
   return (
     <Box>
-      <PairingProgress/>
+        <div style={{display: 'inline-flex', gap: 20, width: '100%'}}>
+          <Paper elevation={3} sx={{padding: 5, width: '40%'}}> 
+            <p>Hello, Admin</p>
+            <CardMedia
+              component="img"
+              height="200"
+              image= {mentorImageUrl}
+              alt="mentor pic"
+            />
+          </Paper>
+          <BasicDateCalendar/>
+          {/* <PairingProgress/> */}
+          <Stack spacing={2} sx={{width: '100%'}}>
+            <Paper elevation={3} sx={{padding: 5}}> Pairings made today </Paper>
+            <Paper elevation={3} sx={{padding: 5}}> <PairingProgress/> </Paper>
+          </Stack>
+        </div>
         <div style={{display: 'flex', alignItems:'center', justifyContent: 'right'}}>
           <Switch checked={noMentorsChecked} onChange={handleNoMentorsChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
           <Typography>No Mentors</Typography>
           <Switch checked={noMenteesChecked} onChange={handleNoMenteesChange} inputProps={{ 'aria-label': 'controlled' }}color="secondary" />
           <Typography>No Mentees</Typography>
         </div>
-        <div style={{ height: '100%', width: '100%', maxWidth: '100%' }}>
+        <Paper elevation={3}>
         {filteredRows.length === 0 ? (
             <div>No results</div>
           ) : (
@@ -152,7 +170,7 @@ export default function DataTable({ changeTab, allocateMentee }: DataTableProps)
               '& .MuiDataGrid-columnHeaderTitle  ': {color: 'white'}}}
             />
           )}
-      </div>
+      </Paper>
     </Box>
   );
 }

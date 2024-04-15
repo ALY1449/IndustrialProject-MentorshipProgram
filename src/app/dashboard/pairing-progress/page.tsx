@@ -24,8 +24,7 @@ const PairingProgress: React.FC = () =>{
 
     return(
         <Box>
-           <Container>
-                <Grid container maxWidth="60%">
+            <Grid container maxWidth="100%">
                     <Grid item xs={3}>
                         <CircularProgress variant="determinate" value={25} size={100} />
                     </Grid>
@@ -53,7 +52,6 @@ const PairingProgress: React.FC = () =>{
                         </Grid>
                     </Grid>
                 </Grid>
-            </Container>
         </Box>
     )
 }
