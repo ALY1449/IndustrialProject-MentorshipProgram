@@ -27,6 +27,7 @@ import mentorpic from "../../../../public/pictures/mentorpic.png";
 import BasicDateCalendar from "../calendar/calendar";
 import PairingProgress from "../pairing-progress/page";
 import PairingsMadeTracker from "../pairings-made-tracker/pairingsMadeTracker";
+import dayjs, { Dayjs } from "dayjs";
 
 // Define the DataTableProps interface
 export interface DataTableProps {
@@ -61,6 +62,7 @@ export default function DataTable({
   const rows = useSelector((state: RootState) => state.dashboard.rows);
   const [chosenRowData, setChosenRowData] = useState<HomeTableData>();
   const [filteredRows, setFilteredRows] = useState<HomeTableData[]>(rows);
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs>(dayjs());
 
   const assignButton = (data: HomeTableData) => {
     setChosenRowData(data);
@@ -121,15 +123,15 @@ export default function DataTable({
     {
       field: "avatar",
       headerName: "Avatar",
-      width: 200,
+      width: 150,
       renderCell: (avatarIcon) => <Avatar />,
     },
-    { field: "fullName", headerName: "Full Name", width: 227 },
-    { field: "registeredOn", headerName: "Registered On", width: 270 },
+    { field: "fullName", headerName: "Full Name", width: 220 },
+    { field: "registeredOn", headerName: "Registered On", width: 200 },
     {
       field: "participatingAs",
       headerName: "Participating as",
-      width: 235,
+      width: 180,
       renderCell: (params) => (
         <Chip label={params.value} variant="outlined" color="secondary" />
       ),
@@ -137,7 +139,7 @@ export default function DataTable({
     {
       field: "status",
       headerName: "Status",
-      width: 220,
+      width: 200,
       renderCell: (params) => (
         <Chip
           color={
@@ -151,6 +153,7 @@ export default function DataTable({
         />
       ),
     },
+    { field: "pairedDuring", headerName: "Paired During", width: 200 },
     {
       field: "assignedMentor",
       headerName: "Assigned Mentor/Mentee",
@@ -202,10 +205,14 @@ export default function DataTable({
             Proceed to pairing
           </Button>
         </Paper>
-        <BasicDateCalendar />
+        <BasicDateCalendar
+          chosenDate={(date: Dayjs) => setSelectedDate(date)}
+        />
         {/* <PairingProgress/> */}
         <Stack spacing={2} sx={{ width: "100%" }}>
-          <Typography>PAIRINGS MADE TODAY</Typography>
+          <Typography>
+            Pairing made during {selectedDate.format("dddd MMMM D, YYYY")}
+          </Typography>
           <PairingsMadeTracker />
           <Typography>PROGRESS</Typography>
           <Paper elevation={3} sx={{ padding: 5 }}>

@@ -44,6 +44,11 @@ const PairingProgress: React.FC = () => {
     dispatch(getWithMentees());
   }, [dispatch]);
 
+  useEffect(() => {
+    const currentDate = new Date();
+    console.log("currentDate ", currentDate);
+  }, []);
+
   return (
     <Box>
       <Grid container maxWidth="100%">

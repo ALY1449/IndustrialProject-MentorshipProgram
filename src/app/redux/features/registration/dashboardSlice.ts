@@ -11,6 +11,7 @@ import {
   updateDoc,
   where,
   getDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { Status } from "./state/dashboard/status/status";
 import { HomeTableData } from "./state/dashboard/home-table-data";
@@ -31,12 +32,14 @@ export const fetchMenteeCollection = createAsyncThunk(
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
+      var data = doc.data();
+      console.log(" data", data);
       // Construct new data object
       const newData: HomeTableData = {
         id: doc.data()["documentOf"],
         avatar: "G",
         fullName: doc.data()["documentOf"],
-        registeredOn: doc.data()["createdAt"].toDate().toISOString(),
+        registeredOn: new Date(doc.data()["createdAt"].toDate()).toDateString(),
         status: doc.data()["status"],
         assignedMentor:
           doc.data()["status"] === "INCOMPLETE"
@@ -49,6 +52,7 @@ export const fetchMenteeCollection = createAsyncThunk(
           doc.data()["status"] === "INCOMPLETE"
             ? "Assign a mentor"
             : doc.data()["assignedMentor"],
+        pairedDuring: doc.data()["pairedDuring"],
       };
       newRows.push(newData);
     });
@@ -60,7 +64,7 @@ export const fetchMenteeCollection = createAsyncThunk(
         id: doc.data()["documentOf"],
         avatar: "G",
         fullName: doc.data()["documentOf"],
-        registeredOn: doc.data()["createdAt"].toDate().toISOString(),
+        registeredOn: new Date(doc.data()["createdAt"].toDate()).toDateString(),
         status: doc.data()["status"],
         assignedMentor:
           doc.data()["status"] === "INCOMPLETE"
@@ -73,6 +77,7 @@ export const fetchMenteeCollection = createAsyncThunk(
           doc.data()["status"] === "INCOMPLETE"
             ? "Assign a mentee"
             : doc.data()["assignedMentor"],
+        pairedDuring: doc.data()["pairedDuring"],
       };
       newRows.push(newData);
     });
@@ -91,9 +96,6 @@ export const updateDocStatus = createAsyncThunk(
     );
     const querySnapshot = await getDocs(q);
 
-    // Array to hold all documents including the updated one
-    const updatedDocuments: HomeTableData[] = [];
-
     // Iterate through the documents in the query result
     querySnapshot.forEach(async (docSnapshot) => {
       try {
@@ -102,26 +104,12 @@ export const updateDocStatus = createAsyncThunk(
         await updateDoc(docRef, {
           status: Status.Completed,
           assignedMentor: "Mentor name",
+          pairedDuring: new Date().toDateString(),
         }); // Update the document
-
-        // Fetch the updated document
-        const updatedDocSnapshot = await getDoc(docRef);
-
-        if (updatedDocSnapshot.exists()) {
-          // Check if the document exists
-          // Add the updated document to the array
-          updatedDocuments.push(updatedDocSnapshot.data() as HomeTableData);
-        } else {
-          console.error("Document does not exist or data is undefined");
-        }
-
-        console.log("Document updated successfully");
       } catch (error) {
         console.error("Error updating document:", error);
       }
     });
-
-    return updatedDocuments; // Return all documents including the updated one
   }
 );
 
@@ -136,9 +124,6 @@ export const updateDocInProgressStatus = createAsyncThunk(
     );
     const querySnapshot = await getDocs(q);
 
-    // Array to hold all documents including the updated one
-    const updatedDocuments: HomeTableData[] = [];
-
     // Iterate through the documents in the query result
     querySnapshot.forEach(async (docSnapshot) => {
       try {
@@ -147,25 +132,10 @@ export const updateDocInProgressStatus = createAsyncThunk(
         await updateDoc(docRef, {
           status: Status.InProgress,
         }); // Update the document
-
-        // Fetch the updated document
-        const updatedDocSnapshot = await getDoc(docRef);
-
-        if (updatedDocSnapshot.exists()) {
-          // Check if the document exists
-          // Add the updated document to the array
-          updatedDocuments.push(updatedDocSnapshot.data() as HomeTableData);
-        } else {
-          console.error("Document does not exist or data is undefined");
-        }
-
-        console.log("Document updated successfully");
       } catch (error) {
         console.error("Error updating document:", error);
       }
     });
-
-    return updatedDocuments; // Return all documents including the updated one
   }
 );
 
@@ -306,18 +276,21 @@ export const dashboardSlice = createSlice({
     builder.addCase(fetchMenteeCollection.pending, (state) => {
       state.status = "loading";
     });
-    builder.addCase(fetchMenteeCollection.fulfilled, (state, action) => {
-      state.rows = action.payload;
-      state.status = "success";
-    });
+    builder.addCase(
+      fetchMenteeCollection.fulfilled,
+      (state, action: PayloadAction<HomeTableData[]>) => {
+        state.rows = action.payload;
+        state.status = "success";
+      }
+    );
     builder.addCase(fetchMenteeCollection.rejected, (state) => {
       state.status = "error";
     });
     builder.addCase(updateDocStatus.pending, (state) => {
       state.status = "loading";
     });
-    builder.addCase(updateDocStatus.fulfilled, () => {
-      console.log("done");
+    builder.addCase(updateDocStatus.fulfilled, (state) => {
+      state.status = "success";
     });
     builder.addCase(updateDocStatus.rejected, (state) => {
       state.status = "error";
@@ -363,11 +336,9 @@ export const dashboardSlice = createSlice({
       }),
       builder.addCase(getWithMentees.fulfilled, (state, action) => {
         state.withMentees = action.payload;
-        console.log("getWithMentees ", state.withMentees);
       }),
       builder.addCase(getWithMentors.fulfilled, (state, action) => {
         state.withMentors = action.payload;
-        console.log("getWithMentors ", state.withMentors);
       });
   },
 });
