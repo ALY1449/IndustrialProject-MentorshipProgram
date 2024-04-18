@@ -3,21 +3,24 @@
 import {
   getNoMentees,
   getNoMentors,
+  getPairedMenteesOnSpecificDay,
+  getPairedMentorsOnSpecificDay,
   getWithMentees,
   getWithMentors,
 } from "@/app/redux/features/registration/dashboardSlice";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { RootState } from "@/app/redux/store";
-import { Paper, Stack } from "@mui/material";
-import { useEffect } from "react";
+import { Paper, Stack, Typography } from "@mui/material";
+import { Dayjs } from "dayjs";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 interface PairingsMadeTrackerProps {
-  pairedMentees: number;
-  pairedMentors: number;
-  remaining: number;
+  chosenDate: Dayjs;
 }
-const PairingsMadeTracker: React.FC = () => {
+const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
+  chosenDate,
+}) => {
   const dispatch = useAppDispatch();
   const noMentors = useSelector(
     (state: RootState) => state.dashboard.noMentors
@@ -25,18 +28,25 @@ const PairingsMadeTracker: React.FC = () => {
   const noMentees = useSelector(
     (state: RootState) => state.dashboard.noMentees
   );
-  const withMentors = useSelector(
-    (state: RootState) => state.dashboard.withMentors
+  const pairedMenteesOnSpecificDay = useSelector(
+    (state: RootState) => state.dashboard.getTotalMenteesSpecificDay
   );
-  const withMentees = useSelector(
-    (state: RootState) => state.dashboard.withMentees
+  const pairedMentorsOnSpecificDay = useSelector(
+    (state: RootState) => state.dashboard.getTotalMentorsSpecificDay
   );
+
+  useEffect(() => {
+    dispatch(
+      getPairedMenteesOnSpecificDay(chosenDate.format("ddd MMM D YYYY"))
+    );
+    dispatch(
+      getPairedMentorsOnSpecificDay(chosenDate.format("ddd MMM D YYYY"))
+    );
+  }, [chosenDate, dispatch]);
 
   useEffect(() => {
     dispatch(getNoMentors());
     dispatch(getNoMentees());
-    dispatch(getWithMentees());
-    dispatch(getWithMentors());
   }, [dispatch]);
 
   return (
@@ -52,7 +62,7 @@ const PairingsMadeTracker: React.FC = () => {
             padding: 5,
           }}
         >
-          {withMentors} MENTEE(s)
+          {pairedMenteesOnSpecificDay} MENTEE(s)
         </Paper>
         <Paper
           elevation={3}
@@ -64,18 +74,7 @@ const PairingsMadeTracker: React.FC = () => {
             padding: 5,
           }}
         >
-          {withMentees} MENTOR(s)
-        </Paper>
-        <Paper
-          elevation={3}
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            padding: 5,
-          }}
-        >
-          {noMentors + noMentees} more unpaired
+          {pairedMentorsOnSpecificDay} MENTOR(s)
         </Paper>
       </Stack>
     </div>

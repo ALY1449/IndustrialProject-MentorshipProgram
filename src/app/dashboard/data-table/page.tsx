@@ -213,7 +213,7 @@ export default function DataTable({
           <Typography>
             Pairing made during {selectedDate.format("dddd MMMM D, YYYY")}
           </Typography>
-          <PairingsMadeTracker />
+          <PairingsMadeTracker chosenDate={selectedDate} />
           <Typography>PROGRESS</Typography>
           <Paper elevation={3} sx={{ padding: 5 }}>
             <PairingProgress />

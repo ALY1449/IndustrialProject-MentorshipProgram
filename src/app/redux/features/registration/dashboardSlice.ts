@@ -32,8 +32,6 @@ export const fetchMenteeCollection = createAsyncThunk(
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      var data = doc.data();
-      console.log(" data", data);
       // Construct new data object
       const newData: HomeTableData = {
         id: doc.data()["documentOf"],
@@ -224,6 +222,24 @@ export const getWithMentees = createAsyncThunk(
   }
 );
 
+export const getPairedMenteesOnSpecificDay = createAsyncThunk(
+  "dashboard/getPairedMenteesOnSpecificDay",
+  async (data: string) => {
+    let totalWithMentees = 0;
+    const q = query(
+      collection(database, "Mentees"),
+      where("status", "==", Status.Completed),
+      where("pairedDuring", "==", data)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      totalWithMentees += 1;
+    });
+    return totalWithMentees;
+  }
+);
+
 export const getWithMentors = createAsyncThunk(
   "dashboard/getWithMentors",
   async () => {
@@ -241,6 +257,54 @@ export const getWithMentors = createAsyncThunk(
   }
 );
 
+export const getPairedMentorsOnSpecificDay = createAsyncThunk(
+  "dashboard/getPairedMentorsOnSpecificDay",
+  async (data: string) => {
+    let totalWithMentees = 0;
+    const q = query(
+      collection(database, "Mentors"),
+      where("status", "==", Status.Completed),
+      where("pairedDuring", "==", data)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      totalWithMentees += 1;
+    });
+    return totalWithMentees;
+  }
+);
+
+export const getRemainingSpecificDay = createAsyncThunk(
+  "dashboard/getRemainingSpecificDay",
+  async (data: string) => {
+    let totalRemainingSpecificDay = 0;
+    const q = query(
+      collection(database, "Mentors"),
+      where("status", "==", Status.Incomplete),
+      where("pairedDuring", "==", data)
+    );
+
+    const r = query(
+      collection(database, "Mentees"),
+      where("status", "==", Status.Incomplete),
+      where("pairedDuring", "==", data)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(() => {
+      totalRemainingSpecificDay += 1;
+    });
+
+    const querySnapshot2 = await getDocs(r);
+    querySnapshot2.forEach(() => {
+      totalRemainingSpecificDay += 1;
+    });
+
+    return totalRemainingSpecificDay;
+  }
+);
+
 export interface HomeDataRows {
   rows: HomeTableData[];
   status: "idle" | "loading" | "success" | "error";
@@ -250,6 +314,8 @@ export interface HomeDataRows {
   noMentors: number;
   withMentees: number;
   withMentors: number;
+  getTotalMenteesSpecificDay: number;
+  getTotalMentorsSpecificDay: number;
 }
 
 const initialState: HomeDataRows = {
@@ -261,6 +327,8 @@ const initialState: HomeDataRows = {
   noMentors: 0,
   withMentees: 0,
   withMentors: 0,
+  getTotalMenteesSpecificDay: 0,
+  getTotalMentorsSpecificDay: 0,
 };
 
 export const dashboardSlice = createSlice({
@@ -339,7 +407,19 @@ export const dashboardSlice = createSlice({
       }),
       builder.addCase(getWithMentors.fulfilled, (state, action) => {
         state.withMentors = action.payload;
-      });
+      }),
+      builder.addCase(
+        getPairedMenteesOnSpecificDay.fulfilled,
+        (state, action) => {
+          state.getTotalMenteesSpecificDay = action.payload;
+        }
+      ),
+      builder.addCase(
+        getPairedMentorsOnSpecificDay.fulfilled,
+        (state, action) => {
+          state.getTotalMentorsSpecificDay = action.payload;
+        }
+      );
   },
 });
 
