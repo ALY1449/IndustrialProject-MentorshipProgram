@@ -1,4 +1,4 @@
-import database from "@/app/firestore/firestore";
+import database from "../../../../../../../firestore/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   query,

@@ -1,5 +1,5 @@
 import { MatchRow } from "@/app/dashboard/results/page";
-import database from "@/app/firestore/firestore";
+import database from "../../../../../../../firestore/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   query,
