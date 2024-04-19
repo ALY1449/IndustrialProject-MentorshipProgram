@@ -2,7 +2,7 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { store } from "../../store";
-import database from "../../../../../firestoreCredentials/firestore";
+import database from "@/app/firestore/firestore";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { Goals } from "./state/goals/goals";
 import { UserState } from "./state/user/user";

@@ -1,7 +1,7 @@
 "use client";
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import database from "../../../../../firestoreCredentials/firestore";
+import database from "@/app/firestore/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   collection,

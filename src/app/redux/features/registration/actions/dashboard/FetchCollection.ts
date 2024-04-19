@@ -1,6 +1,6 @@
 "use client";
 
-import database from "../../../../../../../firestoreCredentials/firestore";
+import database from "@/app/firestore/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Status } from "../../state/dashboard/status/status";
