@@ -1,4 +1,4 @@
-import database from "../../../../../../../firestore/firestore";
+import database from "../../../../../../../firestoreCredentials/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { query, collection, where, getDocs } from "firebase/firestore";
 
