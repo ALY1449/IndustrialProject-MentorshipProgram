@@ -10,26 +10,46 @@ import { RootState } from "@/app/redux/store";
 import { Box, Chip, CircularProgress, Grid } from "@mui/material";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { APIStatus } from "@/app/redux/features/registration/dashboardSlice";
+import ChipSkeleton from "../skeletons/chipsSkeleton/page";
 
 const PairingProgress: React.FC = () => {
   const dispatch = useAppDispatch();
   const totalMentors = useSelector(
     (state: RootState) => state.dashboard.totalMentors
   );
+  const totalMentorsStatus = useSelector(
+    (state: RootState) => state.dashboard.totalMentorsStatus
+  );
   const totalMentees = useSelector(
     (state: RootState) => state.dashboard.totalMentees
+  );
+  const totalMenteesStatus = useSelector(
+    (state: RootState) => state.dashboard.totalMenteesStatus
   );
   const noMentors = useSelector(
     (state: RootState) => state.dashboard.noMentors
   );
+  const noMentorsStatus = useSelector(
+    (state: RootState) => state.dashboard.noMentorsStatus
+  );
   const noMentees = useSelector(
     (state: RootState) => state.dashboard.noMentees
+  );
+  const noMenteesStatus = useSelector(
+    (state: RootState) => state.dashboard.noMenteesStatus
   );
   const withMentors = useSelector(
     (state: RootState) => state.dashboard.withMentors
   );
+  const withMentorsStatus = useSelector(
+    (state: RootState) => state.dashboard.withMentorsStatus
+  );
   const withMentees = useSelector(
     (state: RootState) => state.dashboard.withMentees
+  );
+  const withMenteesStatus = useSelector(
+    (state: RootState) => state.dashboard.withMenteesStatus
   );
 
   useEffect(() => {
@@ -50,25 +70,37 @@ const PairingProgress: React.FC = () => {
         <Grid item xs={3}>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <Chip
-                label={`Total mentors ${totalMentors}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {totalMentorsStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`Total mentors ${totalMentors}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
             <Grid item>
-              <Chip
-                label={`With Mentees ${withMentees}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {withMenteesStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`With Mentees ${withMentees}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
             <Grid item>
-              <Chip
-                label={`With No Mentees ${noMentees}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {noMenteesStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`With No Mentees ${noMentees}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -78,25 +110,37 @@ const PairingProgress: React.FC = () => {
         <Grid item xs={3}>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <Chip
-                label={`Total mentees ${totalMentees}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {totalMenteesStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`Total mentees ${totalMentees}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
             <Grid item>
-              <Chip
-                label={`With Mentors ${withMentors}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {withMentorsStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`With Mentors ${withMentors}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
             <Grid item>
-              <Chip
-                label={`With No Mentors ${noMentors}`}
-                variant="outlined"
-                color="secondary"
-              />
+              {noMentorsStatus !== APIStatus.success ? (
+                <ChipSkeleton />
+              ) : (
+                <Chip
+                  label={`With No Mentors ${noMentors}`}
+                  variant="outlined"
+                  color="secondary"
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>

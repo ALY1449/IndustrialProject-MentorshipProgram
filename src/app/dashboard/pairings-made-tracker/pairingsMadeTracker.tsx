@@ -10,6 +10,7 @@ import { Paper, Skeleton, Stack } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { APIStatus } from "@/app/redux/features/registration/dashboardSlice";
 
 interface PairingsMadeTrackerProps {
   chosenDate: Dayjs;
@@ -24,8 +25,11 @@ const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
   const pairedMentorsOnSpecificDay = useSelector(
     (state: RootState) => state.dashboard.getTotalMentorsSpecificDay
   );
-  const loading = useSelector(
+  const getTotalMenteesSpecificDayStatus = useSelector(
     (state: RootState) => state.dashboard.getTotalMenteesSpecificDayStatus
+  );
+  const getTotalMentorsSpecificDayStatus = useSelector(
+    (state: RootState) => state.dashboard.getTotalMentorsSpecificDayStatus
   );
 
   useEffect(() => {
@@ -41,7 +45,7 @@ const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
   return (
     <div>
       <Stack direction="row" spacing={2}>
-        {loading !== "success" ? (
+        {getTotalMenteesSpecificDayStatus !== APIStatus.success ? (
           <Skeleton
             variant="rectangular"
             width="100%"
@@ -62,18 +66,27 @@ const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
             {pairedMenteesOnSpecificDay} MENTEE(s)
           </Paper>
         )}
-        <Paper
-          elevation={3}
-          sx={{
-            width: "100%",
-            display: "flex",
-            backgroundColor: "#F4E6F2",
-            justifyContent: "center",
-            padding: 5,
-          }}
-        >
-          {pairedMentorsOnSpecificDay} MENTOR(s)
-        </Paper>
+        {getTotalMentorsSpecificDayStatus !== APIStatus.success ? (
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={100}
+            sx={{ backgroundColor: "#F4E6F2", borderRadius: "5px" }}
+          />
+        ) : (
+          <Paper
+            elevation={3}
+            sx={{
+              width: "100%",
+              display: "flex",
+              backgroundColor: "#F4E6F2",
+              justifyContent: "center",
+              padding: 5,
+            }}
+          >
+            {pairedMentorsOnSpecificDay} MENTOR(s)
+          </Paper>
+        )}
       </Stack>
     </div>
   );
