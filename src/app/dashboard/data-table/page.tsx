@@ -17,10 +17,8 @@ import {
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { useSelector } from "react-redux";
-import {
-  fetchMenteeCollection,
-  updateDocInProgressStatus,
-} from "@/app/redux/features/registration/dashboardSlice";
+import { FetchCollection } from "@/app/redux/features/registration/actions/dashboard/FetchCollection";
+import { UpdateStatustoInProgress } from "@/app/redux/features/registration/actions/dashboard/UpdateStatustoInProgress";
 import { HomeTableData } from "@/app/redux/features/registration/state/dashboard/home-table-data";
 import { Status } from "@/app/redux/features/registration/state/dashboard/status/status";
 import mentorpic from "../../../../public/pictures/mentorpic.png";
@@ -66,11 +64,11 @@ export default function DataTable({
 
   const assignButton = (data: HomeTableData) => {
     setChosenRowData(data);
-    dispatch(updateDocInProgressStatus(data));
+    dispatch(UpdateStatustoInProgress(data));
   };
 
   useEffect(() => {
-    dispatch(fetchMenteeCollection());
+    dispatch(FetchCollection());
   }, [dispatch]);
 
   useEffect(() => {

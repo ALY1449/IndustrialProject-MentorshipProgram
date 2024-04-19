@@ -10,10 +10,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
-import {
-  fetchMenteeCollection,
-  updateDocInProgressStatus,
-} from "@/app/redux/features/registration/dashboardSlice";
+import { FetchCollection } from "@/app/redux/features/registration/actions/dashboard/FetchCollection";
+import { UpdateStatustoInProgress } from "@/app/redux/features/registration/actions/dashboard/UpdateStatustoInProgress";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -69,7 +67,7 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({
   const R = require("ramda");
 
   useEffect(() => {
-    dispatch(fetchMenteeCollection());
+    dispatch(FetchCollection());
   }, [dispatch]);
 
   useEffect(() => {
@@ -101,8 +99,8 @@ const MatchTableComponent: React.FC<MatchTableComponentProps> = ({
     });
 
     if (foundData) {
-      dispatch(updateDocInProgressStatus(foundData));
-      dispatch(fetchMenteeCollection());
+      dispatch(UpdateStatustoInProgress(foundData));
+      dispatch(FetchCollection());
     }
   };
 

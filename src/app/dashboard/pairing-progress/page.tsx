@@ -1,13 +1,10 @@
 "use client";
-
-import {
-  getNoMentees,
-  getNoMentors,
-  getTotalMentees,
-  getTotalMentors,
-  getWithMentees,
-  getWithMentors,
-} from "@/app/redux/features/registration/dashboardSlice";
+import { FetchTotalMentors } from "@/app/redux/features/registration/actions/dashboard/FetchTotalMentors";
+import { FetchTotalMentees } from "@/app/redux/features/registration/actions/dashboard/FetchTotalMentees";
+import { FetchNoMentors } from "@/app/redux/features/registration/actions/dashboard/FetchNoMentors";
+import { FetchNoMentees } from "@/app/redux/features/registration/actions/dashboard/FetchNoMentees";
+import { FetchMentorsWithMentees } from "@/app/redux/features/registration/actions/dashboard/FetchMentorsWithMentees";
+import { FetchMenteesWithMentors } from "@/app/redux/features/registration/actions/dashboard/FetchMenteesWithMentors";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { RootState } from "@/app/redux/store";
 import { Box, Chip, CircularProgress, Grid } from "@mui/material";
@@ -36,12 +33,12 @@ const PairingProgress: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(getTotalMentors());
-    dispatch(getTotalMentees());
-    dispatch(getNoMentors());
-    dispatch(getNoMentees());
-    dispatch(getWithMentors());
-    dispatch(getWithMentees());
+    dispatch(FetchTotalMentors());
+    dispatch(FetchTotalMentees());
+    dispatch(FetchNoMentors());
+    dispatch(FetchNoMentees());
+    dispatch(FetchMenteesWithMentors());
+    dispatch(FetchMentorsWithMentees());
   }, [dispatch]);
 
   return (

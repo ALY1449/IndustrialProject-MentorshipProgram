@@ -1,18 +1,14 @@
 "use client";
 
-import {
-  getNoMentees,
-  getNoMentors,
-  getPairedMenteesOnSpecificDay,
-  getPairedMentorsOnSpecificDay,
-  getWithMentees,
-  getWithMentors,
-} from "@/app/redux/features/registration/dashboardSlice";
+import { FetchNoMentors } from "@/app/redux/features/registration/actions/dashboard/FetchNoMentors";
+import { FetchNoMentees } from "@/app/redux/features/registration/actions/dashboard/FetchNoMentees";
+import { FetchMenteesPairedOnThisDay } from "@/app/redux/features/registration/actions/dashboard/FetchMenteesPairedOnThisDay";
+import { FetchMentorsPairedOnThisDay } from "@/app/redux/features/registration/actions/dashboard/FetchMentorsPairedOnThisDay";
 import { useAppDispatch } from "@/app/redux/hooks";
 import { RootState } from "@/app/redux/store";
-import { Paper, Stack, Typography } from "@mui/material";
+import { Paper, Skeleton, Stack } from "@mui/material";
 import { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 interface PairingsMadeTrackerProps {
@@ -22,48 +18,50 @@ const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
   chosenDate,
 }) => {
   const dispatch = useAppDispatch();
-  const noMentors = useSelector(
-    (state: RootState) => state.dashboard.noMentors
-  );
-  const noMentees = useSelector(
-    (state: RootState) => state.dashboard.noMentees
-  );
   const pairedMenteesOnSpecificDay = useSelector(
     (state: RootState) => state.dashboard.getTotalMenteesSpecificDay
   );
   const pairedMentorsOnSpecificDay = useSelector(
     (state: RootState) => state.dashboard.getTotalMentorsSpecificDay
   );
+  const loading = useSelector(
+    (state: RootState) => state.dashboard.getTotalMenteesSpecificDayStatus
+  );
 
   useEffect(() => {
-    dispatch(
-      getPairedMenteesOnSpecificDay(chosenDate.format("ddd MMM D YYYY"))
-    );
-    dispatch(
-      getPairedMentorsOnSpecificDay(chosenDate.format("ddd MMM D YYYY"))
-    );
+    dispatch(FetchMenteesPairedOnThisDay(chosenDate.format("ddd MMM D YYYY")));
+    dispatch(FetchMentorsPairedOnThisDay(chosenDate.format("ddd MMM D YYYY")));
   }, [chosenDate, dispatch]);
 
   useEffect(() => {
-    dispatch(getNoMentors());
-    dispatch(getNoMentees());
+    dispatch(FetchNoMentors());
+    dispatch(FetchNoMentees());
   }, [dispatch]);
 
   return (
     <div>
       <Stack direction="row" spacing={2}>
-        <Paper
-          elevation={3}
-          sx={{
-            width: "100%",
-            display: "flex",
-            backgroundColor: "#F4E6F2",
-            justifyContent: "center",
-            padding: 5,
-          }}
-        >
-          {pairedMenteesOnSpecificDay} MENTEE(s)
-        </Paper>
+        {loading !== "success" ? (
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={100}
+            sx={{ backgroundColor: "#F4E6F2", borderRadius: "5px" }}
+          />
+        ) : (
+          <Paper
+            elevation={3}
+            sx={{
+              width: "100%",
+              display: "flex",
+              backgroundColor: "#F4E6F2",
+              justifyContent: "center",
+              padding: 5,
+            }}
+          >
+            {pairedMenteesOnSpecificDay} MENTEE(s)
+          </Paper>
+        )}
         <Paper
           elevation={3}
           sx={{
