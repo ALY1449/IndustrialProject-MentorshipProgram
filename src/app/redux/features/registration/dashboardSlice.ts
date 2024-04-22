@@ -82,7 +82,6 @@ export const dashboardSlice = createSlice({
         (state, action: PayloadAction<HomeTableData[]>) => {
           state.rows = action.payload;
           state.status = APIStatus.success;
-          console.log("rows", state.rows);
         }
       )
       .addCase(FetchCollection.rejected, (state) => {
