@@ -1,20 +1,16 @@
 import database from "@/app/firestore/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { query, collection, where, getDocs } from "firebase/firestore";
 
 export const FetchTotalMentees = createAsyncThunk(
   "dashboard/getTotalMentees",
   async () => {
-    let totalMentees = 0;
-    const q = query(
-      collection(database, "Mentees"),
-      where("documentOf", "!=", null)
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(() => {
-      totalMentees += 1;
-    });
-    return totalMentees;
+    try {
+      const response = await axios.get<number>(`api/totalMentees`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 );

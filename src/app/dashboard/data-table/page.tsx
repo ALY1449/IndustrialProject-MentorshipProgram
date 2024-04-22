@@ -204,10 +204,9 @@ export default function DataTable({
             Proceed to pairing
           </Button>
         </Paper>
-        {/* <BasicDateCalendar
+        <BasicDateCalendar
           chosenDate={(date: Dayjs) => setSelectedDate(date)}
-        /> */}
-        {/* <PairingProgress/> */}
+        />
         <Stack spacing={2} sx={{ width: "100%" }}>
           <Typography>
             Pairing made during {selectedDate.format("dddd MMMM D, YYYY")}
@@ -215,7 +214,7 @@ export default function DataTable({
           <PairingsMadeTracker chosenDate={selectedDate} />
           <Typography>PROGRESS</Typography>
           <Paper elevation={3} sx={{ padding: 5 }}>
-            {/* <PairingProgress /> */}
+            <PairingProgress />
           </Paper>
         </Stack>
       </div>
