@@ -1,17 +1,6 @@
 "use client";
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import database from "@/app/firestore/firestore";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { Status } from "./state/dashboard/status/status";
 import { HomeTableData } from "./state/dashboard/home-table-data";
 import { FetchCollection } from "./actions/dashboard/FetchCollection";
 import { UpdateStatustoComplete } from "./actions/dashboard/UpdateStatustoComplete";
@@ -92,7 +81,8 @@ export const dashboardSlice = createSlice({
         FetchCollection.fulfilled,
         (state, action: PayloadAction<HomeTableData[]>) => {
           state.rows = action.payload;
-          state.status = APIStatus.loading;
+          state.status = APIStatus.success;
+          console.log("rows", state.rows);
         }
       )
       .addCase(FetchCollection.rejected, (state) => {

@@ -1,22 +1,16 @@
-import database from "@/app/firestore/firestore";
+import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { query, collection, where, getDocs } from "firebase/firestore";
-import { Status } from "../../state/dashboard/status/status";
 
 export const FetchMenteesPairedOnThisDay = createAsyncThunk(
-  "dashboard/getPairedMenteesOnSpecificDay",
+  "mentees/fetchMenteesPairedOnThisDay",
   async (data: string) => {
-    let totalWithMentees = 0;
-    const q = query(
-      collection(database, "Mentees"),
-      where("status", "==", Status.Completed),
-      where("pairedDuring", "==", data)
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(() => {
-      totalWithMentees += 1;
-    });
-    return totalWithMentees;
+    try {
+      const response = await axios.get<number>(
+        `/api/menteesPairedOnThisDay/${data}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 );

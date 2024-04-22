@@ -37,11 +37,6 @@ const PairingsMadeTracker: React.FC<PairingsMadeTrackerProps> = ({
     dispatch(FetchMentorsPairedOnThisDay(chosenDate.format("ddd MMM D YYYY")));
   }, [chosenDate, dispatch]);
 
-  useEffect(() => {
-    dispatch(FetchNoMentors());
-    dispatch(FetchNoMentees());
-  }, [dispatch]);
-
   return (
     <div>
       <Stack direction="row" spacing={2}>
